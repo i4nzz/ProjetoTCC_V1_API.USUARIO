@@ -57,7 +57,7 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("api/v1/[controller]/RemoverUsuario/{id}")]
+    [Route("api/v1/[controller]/RemoverUsuario/{id}")] 
     public async Task<IActionResult> Remover(int id)
     {
         await _service.RemoverAsync(id);

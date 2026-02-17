@@ -4,6 +4,12 @@ using Usuarios.API.Infrastructure.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// liberar a porta 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(7018); // HTTP
+});
+
 // Add services to the container.
 builder.Services.AddDbContext<UsuarioContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -23,7 +29,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// somente http
+//app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
