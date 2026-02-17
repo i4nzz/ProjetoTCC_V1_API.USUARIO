@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\v2\" />
     <Folder Include="Middlewares\" />
   </ItemGroup>
 

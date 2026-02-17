@@ -12,6 +12,6 @@ public class CategoriaFinanceira
     {
         Nome = nome;
     }
-    // dotnet ef migrations add secondCreate --project Usuarios.API.Infra --startup-project Usuarios.API
+    // dotnet ef migrations add newCreate --project Usuarios.API.Infra --startup-project Usuarios.API
     // dotnet ef database update --project Usuarios.API.Infra --startup-project Usuarios.API
 }

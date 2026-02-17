@@ -10,5 +10,6 @@ namespace Usuarios.API.Application.Interfaces
         Task<UsuarioDto> CriarAsync(UsuarioDto dto);
         Task AtualizarAsync(int id, UsuarioDto dto);
         Task RemoverAsync(int id);
+        //Task GerarHashSenha(UsuarioDto dto);
     }
 }

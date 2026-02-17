@@ -11,7 +11,8 @@ namespace Usuarios.API.Application.Mapping
             {
                 Nome = usuario.Nome,
                 Email = usuario.Email,
-                Telefone = usuario.Telefone
+                Telefone = usuario.Telefone,
+                Ativo = usuario.Ativo
             };
         }
 

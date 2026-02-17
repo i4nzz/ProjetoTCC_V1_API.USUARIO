@@ -20,9 +20,17 @@ public class UsuarioMap : IEntityTypeConfiguration<Usuario>
                .IsRequired()
                .HasMaxLength(150);
 
+        builder.Property(x => x.SenhaHash)
+               .IsRequired()
+               .HasMaxLength(255);
+
         builder.Property(x => x.Telefone)
                .IsRequired()
                .HasMaxLength(20);
+
+        builder.Property(x => x.Ativo)
+               .HasDefaultValue(true)
+               .IsRequired();
 
         builder.Property(x => x.DataCriacao)
                .IsRequired();

@@ -45,6 +45,7 @@ public class UsuarioService : IUsuarioService
         usuario.Nome = dto.Nome;
         usuario.Email = dto.Email;
         usuario.Telefone = dto.Telefone;
+        usuario.Ativo = dto.Ativo;
 
         await _repository.AtualizarAsync(usuario);
     }
@@ -67,7 +68,8 @@ public class UsuarioService : IUsuarioService
         {
             Nome = usuario.Nome,
             Email = usuario.Email,
-            Telefone = usuario.Telefone
+            Telefone = usuario.Telefone,
+            Ativo = usuario.Ativo
         };
     }
 }
