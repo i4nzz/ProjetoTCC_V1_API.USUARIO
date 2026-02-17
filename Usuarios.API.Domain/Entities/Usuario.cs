@@ -8,6 +8,7 @@ public class Usuario
     public string Telefone { get; set; }
     public DateTime DataCriacao { get; set; }
 
+    protected Usuario() { }
     public Usuario(string nome, string email, string telefone)
     {
         Nome = nome;

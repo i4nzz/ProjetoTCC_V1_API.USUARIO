@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs;
 using Usuarios.API.Application.Interfaces;
+using Usuarios.API.Application.Mapping;
 
 namespace Usuarios.API.Controllers.v1;
 
@@ -19,9 +21,9 @@ public class UsuarioController : ControllerBase
     public async Task<IActionResult> ObterTodos()
     {
         var usuarios = await _service.ObterTodosAsync();
-        return Ok(usuarios);
-    }
 
+        return Ok(new ResponseApi<IEnumerable<UsuarioDto>>(usuarios.ToDtoList(), "Usuários obtidos com sucesso"));
+    }
     [HttpGet]
     [Route("api/v1/[controller]/ObterPorId/{id}")]
     public async Task<IActionResult> ObterPorId(int id)
@@ -30,18 +32,20 @@ public class UsuarioController : ControllerBase
 
         if (usuario == null)
         {
-            return NotFound(new { mensagem = "Usuário não encontrado" });
+            return NotFound(new ResponseApi<UsuarioDto>(new List<string> { "Usuário não encontrado" }));
         }
 
-        return Ok(usuario);
+        return Ok(new ResponseApi<UsuarioDto>(usuario.ToDto(),"Usuário obtido com sucesso"));
     }
+
 
     [HttpPost]
     [Route("api/v1/[controller]/AdicionarUsuario")]
     public async Task<IActionResult> Criar([FromBody] UsuarioDto dto)
     {
         var usuario = await _service.CriarAsync(dto);
-        return Ok();
+
+        return Ok(new ResponseApi<UsuarioDto>(usuario, "Usuário criado com sucesso"));
     }
 
     [HttpPut]
@@ -49,7 +53,7 @@ public class UsuarioController : ControllerBase
     public async Task<IActionResult> Atualizar(int id, [FromBody] UsuarioDto dto)
     {
         await _service.AtualizarAsync(id, dto);
-        return Ok("UsuarioAtualizado");
+        return Ok(new ResponseApi<string>("Usuário atualizado com sucesso"));
     }
 
     [HttpDelete]
@@ -57,6 +61,6 @@ public class UsuarioController : ControllerBase
     public async Task<IActionResult> Remover(int id)
     {
         await _service.RemoverAsync(id);
-        return Ok("Usuario removido");
+        return Ok(new ResponseApi<string>("Usuário removido com sucesso"));
     }
 }

@@ -8,6 +8,8 @@ public class UsuarioMap : IEntityTypeConfiguration<Usuario>
 {
     public void Configure(EntityTypeBuilder<Usuario> builder)
     {
+        builder.ToTable("usuario");
+
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Nome)
@@ -26,4 +28,5 @@ public class UsuarioMap : IEntityTypeConfiguration<Usuario>
                .IsRequired();
     }
 }
+
 
