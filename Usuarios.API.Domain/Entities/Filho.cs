@@ -1,4 +1,6 @@
-﻿namespace Usuarios.API.Domain.Entities
+﻿using Usuarios.API.Domain.Enum;
+
+namespace Usuarios.API.Domain.Entities
 {
     public class Filho : Usuario
     {
@@ -7,7 +9,7 @@
         protected Filho() { }
 
         public Filho(string nome, string email, string telefone, DateTime dataNascimento)
-            : base(nome, email, telefone)
+           : base(nome, email, telefone, Perfil.Filho)
         {
             DataNascimento = dataNascimento;
         }

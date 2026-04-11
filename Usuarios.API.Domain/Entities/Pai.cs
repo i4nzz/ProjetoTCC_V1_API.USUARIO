@@ -1,11 +1,11 @@
 ﻿namespace Usuarios.API.Domain.Entities;
-
+using Enum;
 public class Pai : Usuario
 {
     protected Pai() { }
 
     public Pai(string nome, string email, string telefone)
-        : base(nome, email, telefone)
+        : base(nome, email, telefone, Perfil.Pai)
     {
     }
 
