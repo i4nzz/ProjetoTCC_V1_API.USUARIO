@@ -6,35 +6,45 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Usuarios.API.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class secondCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Usuarios",
-                table: "Usuarios");
-
-            migrationBuilder.RenameTable(
-                name: "Usuarios",
-                newName: "usuario");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_usuario",
-                table: "usuario",
-                column: "Id");
-
             migrationBuilder.CreateTable(
                 name: "categoria_financeira",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    CategoriaFinanceiraId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_categoria_financeira", x => x.Id);
+                    table.PrimaryKey("PK_categoria_financeira", x => x.CategoriaFinanceiraId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "usuario",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    SenhaHash = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Perfil = table.Column<int>(type: "int", nullable: false),
+                    PaiId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_usuario", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_usuario_usuario_PaiId",
+                        column: x => x.PaiId,
+                        principalTable: "usuario",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -56,6 +66,29 @@ namespace Usuarios.API.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "mesada",
+                columns: table => new
+                {
+                    MesadaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FilhoId = table.Column<int>(type: "int", nullable: false),
+                    TarefaId = table.Column<int>(type: "int", nullable: true),
+                    Valor = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Mes = table.Column<int>(type: "int", nullable: false),
+                    Ano = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_mesada", x => x.MesadaId);
+                    table.ForeignKey(
+                        name: "FK_mesada_usuario_FilhoId",
+                        column: x => x.FilhoId,
+                        principalTable: "usuario",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "pai",
                 columns: table => new
                 {
@@ -73,45 +106,25 @@ namespace Usuarios.API.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "mesada",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FilhoId = table.Column<int>(type: "int", nullable: false),
-                    Valor = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Mes = table.Column<int>(type: "int", nullable: false),
-                    Ano = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_mesada", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_mesada_filho_FilhoId",
-                        column: x => x.FilhoId,
-                        principalTable: "filho",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "recompensa",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FilhoId = table.Column<int>(type: "int", nullable: false),
+                    TarefaId = table.Column<int>(type: "int", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     PontosNecessarios = table.Column<int>(type: "int", nullable: false),
-                    Ativa = table.Column<bool>(type: "bit", nullable: false)
+                    PodeNecessariosInt = table.Column<bool>(type: "bit", nullable: false),
+                    DataRegistro = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_recompensa", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_recompensa_filho_FilhoId",
+                        name: "FK_recompensa_usuario_FilhoId",
                         column: x => x.FilhoId,
-                        principalTable: "filho",
+                        principalTable: "usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -120,23 +133,65 @@ namespace Usuarios.API.Infra.Migrations
                 name: "tarefa",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    TarefaId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FilhoId = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Pontos = table.Column<int>(type: "int", nullable: false),
-                    Prazo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Preco = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BeneficiarioTarefaId = table.Column<int>(type: "int", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FilhoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tarefa", x => x.Id);
+                    table.PrimaryKey("PK_tarefa", x => x.TarefaId);
                     table.ForeignKey(
-                        name: "FK_tarefa_filho_FilhoId",
+                        name: "FK_tarefa_usuario_FilhoId",
                         column: x => x.FilhoId,
-                        principalTable: "filho",
+                        principalTable: "usuario",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "registro_financeiro",
+                columns: table => new
+                {
+                    RegistroId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FilhoId = table.Column<int>(type: "int", nullable: false),
+                    CategoriaId = table.Column<int>(type: "int", nullable: false),
+                    MesadaId = table.Column<int>(type: "int", nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    DataRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CategoriaFinanceiraId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_registro_financeiro", x => x.RegistroId);
+                    table.ForeignKey(
+                        name: "FK_registro_financeiro_categoria_financeira_CategoriaFinanceiraId",
+                        column: x => x.CategoriaFinanceiraId,
+                        principalTable: "categoria_financeira",
+                        principalColumn: "CategoriaFinanceiraId");
+                    table.ForeignKey(
+                        name: "FK_registro_financeiro_categoria_financeira_CategoriaId",
+                        column: x => x.CategoriaId,
+                        principalTable: "categoria_financeira",
+                        principalColumn: "CategoriaFinanceiraId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_registro_financeiro_mesada_MesadaId",
+                        column: x => x.MesadaId,
+                        principalTable: "mesada",
+                        principalColumn: "MesadaId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_registro_financeiro_usuario_FilhoId",
+                        column: x => x.FilhoId,
+                        principalTable: "usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -162,42 +217,6 @@ namespace Usuarios.API.Infra.Migrations
                         name: "FK_pais_filhos_pai_PaiId",
                         column: x => x.PaiId,
                         principalTable: "pai",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "registro_financeiro",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FilhoId = table.Column<int>(type: "int", nullable: false),
-                    CategoriaId = table.Column<int>(type: "int", nullable: false),
-                    MesadaId = table.Column<int>(type: "int", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    Valor = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    DataRegistro = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_registro_financeiro", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_registro_financeiro_categoria_financeira_CategoriaId",
-                        column: x => x.CategoriaId,
-                        principalTable: "categoria_financeira",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_registro_financeiro_filho_FilhoId",
-                        column: x => x.FilhoId,
-                        principalTable: "filho",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_registro_financeiro_mesada_MesadaId",
-                        column: x => x.MesadaId,
-                        principalTable: "mesada",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -239,7 +258,8 @@ namespace Usuarios.API.Infra.Migrations
                     UrlFoto = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     DataEnvio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Validada = table.Column<bool>(type: "bit", nullable: false),
-                    DataValidacao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DataValidacao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TarefaId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -248,8 +268,13 @@ namespace Usuarios.API.Infra.Migrations
                         name: "FK_comprovacao_tarefa_tarefa_TarefaId",
                         column: x => x.TarefaId,
                         principalTable: "tarefa",
-                        principalColumn: "Id",
+                        principalColumn: "TarefaId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_comprovacao_tarefa_tarefa_TarefaId1",
+                        column: x => x.TarefaId1,
+                        principalTable: "tarefa",
+                        principalColumn: "TarefaId");
                 });
 
             migrationBuilder.CreateTable(
@@ -267,23 +292,28 @@ namespace Usuarios.API.Infra.Migrations
                 {
                     table.PrimaryKey("PK_pontuacao", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_pontuacao_filho_FilhoId",
-                        column: x => x.FilhoId,
-                        principalTable: "filho",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_pontuacao_tarefa_TarefaId",
                         column: x => x.TarefaId,
                         principalTable: "tarefa",
-                        principalColumn: "Id",
+                        principalColumn: "TarefaId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_pontuacao_usuario_FilhoId",
+                        column: x => x.FilhoId,
+                        principalTable: "usuario",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_comprovacao_tarefa_TarefaId",
                 table: "comprovacao_tarefa",
                 column: "TarefaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_comprovacao_tarefa_TarefaId1",
+                table: "comprovacao_tarefa",
+                column: "TarefaId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_mesada_FilhoId",
@@ -322,6 +352,11 @@ namespace Usuarios.API.Infra.Migrations
                 column: "RecompensaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_registro_financeiro_CategoriaFinanceiraId",
+                table: "registro_financeiro",
+                column: "CategoriaFinanceiraId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_registro_financeiro_CategoriaId",
                 table: "registro_financeiro",
                 column: "CategoriaId");
@@ -340,6 +375,11 @@ namespace Usuarios.API.Infra.Migrations
                 name: "IX_tarefa_FilhoId",
                 table: "tarefa",
                 column: "FilhoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_usuario_PaiId",
+                table: "usuario",
+                column: "PaiId");
         }
 
         /// <inheritdoc />
@@ -367,6 +407,9 @@ namespace Usuarios.API.Infra.Migrations
                 name: "tarefa");
 
             migrationBuilder.DropTable(
+                name: "filho");
+
+            migrationBuilder.DropTable(
                 name: "recompensa");
 
             migrationBuilder.DropTable(
@@ -376,20 +419,7 @@ namespace Usuarios.API.Infra.Migrations
                 name: "mesada");
 
             migrationBuilder.DropTable(
-                name: "filho");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_usuario",
-                table: "usuario");
-
-            migrationBuilder.RenameTable(
-                name: "usuario",
-                newName: "Usuarios");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Usuarios",
-                table: "Usuarios",
-                column: "Id");
+                name: "usuario");
         }
     }
 }

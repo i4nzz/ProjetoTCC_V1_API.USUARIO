@@ -23,7 +23,7 @@ namespace Usuarios.API.Infra.Mappings
                    .IsRequired();
 
             builder.HasOne(x => x.Tarefa)
-                   .WithMany()
+                   .WithMany(t => t.Comprovacoes)
                    .HasForeignKey(x => x.TarefaId)
                    .OnDelete(DeleteBehavior.Cascade);
         }

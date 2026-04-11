@@ -9,8 +9,7 @@ namespace Usuarios.API.Infra.Mappings
         public void Configure(EntityTypeBuilder<Mesada> builder)
         {
             builder.ToTable("mesada");
-
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.MesadaId);
 
             builder.Property(x => x.Valor)
                    .HasColumnType("decimal(10,2)")

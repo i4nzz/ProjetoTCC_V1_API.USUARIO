@@ -9,8 +9,7 @@ namespace Usuarios.API.Infra.Mappings
         public void Configure(EntityTypeBuilder<Tarefa> builder)
         {
             builder.ToTable("tarefa");
-
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.TarefaId);
 
             builder.Property(x => x.Titulo)
                    .IsRequired()
@@ -21,13 +20,6 @@ namespace Usuarios.API.Infra.Mappings
 
             builder.Property(x => x.Pontos)
                    .IsRequired();
-
-            builder.Property(x => x.Prazo)
-                   .IsRequired();
-
-            builder.Property(x => x.Status)
-                   .IsRequired()
-                   .HasMaxLength(50);
 
             builder.Property(x => x.DataCriacao)
                    .IsRequired();

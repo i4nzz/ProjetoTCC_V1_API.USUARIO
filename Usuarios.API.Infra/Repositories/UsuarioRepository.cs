@@ -1,15 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Usuarios.API.Domain.Entities;
-using Usuarios.API.Domain.Repositories;
-using Usuarios.API.Infrastructure.Data;
+using Usuarios.API.Domain.Interfaces;
+using Usuarios.API.Infra.Data;
+
 
 namespace Usuarios.API.Infrastructure.Repositories;
 
 public class UsuarioRepository : IUsuarioRepository
 {
-    private readonly UsuarioContext _context;
+    private readonly AppDbContexto _context;
 
-    public UsuarioRepository(UsuarioContext context)
+    public UsuarioRepository(AppDbContexto context)
     {
         _context = context;
     }

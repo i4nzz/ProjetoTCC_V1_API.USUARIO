@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Usuarios.API.Infrastructure.Data;
-using Usuarios.API.Infrastructure.IoC;
+using Usuarios.API.Infra.Data;
+using Usuarios.API.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +11,7 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 // Add services to the container.
-builder.Services.AddDbContext<UsuarioContext>(options =>
+builder.Services.AddDbContext<AppDbContexto>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddInfrastructure();

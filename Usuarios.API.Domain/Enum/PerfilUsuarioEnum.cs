@@ -1,6 +1,6 @@
 ﻿namespace Usuarios.API.Domain.Enum
 {
-    public enum Perfil
+    public enum PerfilUsuarioEnum
     {
         Pai = 1,
         Filho = 2

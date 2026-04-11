@@ -9,8 +9,7 @@ namespace Usuarios.API.Infra.Mappings
         public void Configure(EntityTypeBuilder<RegistroFinanceiro> builder)
         {
             builder.ToTable("registro_financeiro");
-
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.RegistroId);
 
             builder.Property(x => x.Descricao)
                    .HasMaxLength(300);

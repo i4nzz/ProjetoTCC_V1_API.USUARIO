@@ -2,22 +2,13 @@
 
 public class Mesada
 {
-    public int Id { get; private set; }
+    public int MesadaId { get; set; }
+    public int FilhoId { get; set; }
+    public int? TarefaId { get; set; }
+    public decimal Valor { get; set; }
+    public int Mes { get; set; }
+    public int Ano { get; set; }
 
-    public int FilhoId { get; private set; }
-    public Filho Filho { get; private set; }
-
-    public decimal Valor { get; private set; }
-    public int Mes { get; private set; }
-    public int Ano { get; private set; }
-
-    protected Mesada() { }
-
-    public Mesada(int filhoId, decimal valor, int mes, int ano)
-    {
-        FilhoId = filhoId;
-        Valor = valor;
-        Mes = mes;
-        Ano = ano;
-    }
+    // Relacionamentos
+    public Usuario Filho { get; set; } = null!;
 }

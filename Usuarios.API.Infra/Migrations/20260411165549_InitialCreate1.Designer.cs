@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Usuarios.API.Infrastructure.Data;
+using Usuarios.API.Infra.Data;
 
 #nullable disable
 
 namespace Usuarios.API.Infra.Migrations
 {
-    [DbContext(typeof(UsuarioContext))]
-    partial class UsuarioContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AppDbContexto))]
+    [Migration("20260411165549_InitialCreate1")]
+    partial class InitialCreate1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,18 +27,18 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.CategoriaFinanceira", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CategoriaFinanceiraId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoriaFinanceiraId"));
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoriaFinanceiraId");
 
                     b.ToTable("categoria_financeira", (string)null);
                 });
@@ -74,11 +77,11 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.Mesada", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("MesadaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MesadaId"));
 
                     b.Property<int>("Ano")
                         .HasColumnType("int");
@@ -89,10 +92,13 @@ namespace Usuarios.API.Infra.Migrations
                     b.Property<int>("Mes")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TarefaId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(10,2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("MesadaId");
 
                     b.HasIndex("FilhoId");
 
@@ -155,8 +161,8 @@ namespace Usuarios.API.Infra.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Ativa")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("DataRegistro")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -166,7 +172,13 @@ namespace Usuarios.API.Infra.Migrations
                     b.Property<int>("FilhoId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("PodeNecessariosInt")
+                        .HasColumnType("bit");
+
                     b.Property<int>("PontosNecessarios")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TarefaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -204,11 +216,14 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.RegistroFinanceiro", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RegistroId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RegistroId"));
+
+                    b.Property<int?>("CategoriaFinanceiraId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
@@ -230,7 +245,9 @@ namespace Usuarios.API.Infra.Migrations
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(10,2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("RegistroId");
+
+                    b.HasIndex("CategoriaFinanceiraId");
 
                     b.HasIndex("CategoriaId");
 
@@ -243,17 +260,16 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.Tarefa", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TarefaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TarefaId"));
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -266,17 +282,12 @@ namespace Usuarios.API.Infra.Migrations
                     b.Property<DateTime>("Prazo")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TarefaId");
 
                     b.HasIndex("FilhoId");
 
@@ -296,9 +307,6 @@ namespace Usuarios.API.Infra.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -309,17 +317,20 @@ namespace Usuarios.API.Infra.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("PaiId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Perfil")
+                        .HasColumnType("int");
+
                     b.Property<string>("SenhaHash")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Telefone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("PaiId");
 
                     b.ToTable("usuario", (string)null);
 
@@ -346,7 +357,7 @@ namespace Usuarios.API.Infra.Migrations
             modelBuilder.Entity("Usuarios.API.Domain.Entities.ComprovacaoTarefa", b =>
                 {
                     b.HasOne("Usuarios.API.Domain.Entities.Tarefa", "Tarefa")
-                        .WithMany()
+                        .WithMany("Comprovacoes")
                         .HasForeignKey("TarefaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -356,7 +367,7 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.Mesada", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Filho", "Filho")
+                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -386,7 +397,7 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.Pontuacao", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Filho", "Filho")
+                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -405,7 +416,7 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.Recompensa", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Filho", "Filho")
+                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -435,13 +446,17 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.RegistroFinanceiro", b =>
                 {
+                    b.HasOne("Usuarios.API.Domain.Entities.CategoriaFinanceira", null)
+                        .WithMany("Registros")
+                        .HasForeignKey("CategoriaFinanceiraId");
+
                     b.HasOne("Usuarios.API.Domain.Entities.CategoriaFinanceira", "Categoria")
                         .WithMany()
                         .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Usuarios.API.Domain.Entities.Filho", "Filho")
+                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -462,13 +477,22 @@ namespace Usuarios.API.Infra.Migrations
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.Tarefa", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Filho", "Filho")
+                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Filho");
+                });
+
+            modelBuilder.Entity("Usuarios.API.Domain.Entities.Usuario", b =>
+                {
+                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Pai")
+                        .WithMany("Filhos")
+                        .HasForeignKey("PaiId");
+
+                    b.Navigation("Pai");
                 });
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.Filho", b =>
@@ -487,6 +511,21 @@ namespace Usuarios.API.Infra.Migrations
                         .HasForeignKey("Usuarios.API.Domain.Entities.Pai", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Usuarios.API.Domain.Entities.CategoriaFinanceira", b =>
+                {
+                    b.Navigation("Registros");
+                });
+
+            modelBuilder.Entity("Usuarios.API.Domain.Entities.Tarefa", b =>
+                {
+                    b.Navigation("Comprovacoes");
+                });
+
+            modelBuilder.Entity("Usuarios.API.Domain.Entities.Usuario", b =>
+                {
+                    b.Navigation("Filhos");
                 });
 
             modelBuilder.Entity("Usuarios.API.Domain.Entities.Pai", b =>

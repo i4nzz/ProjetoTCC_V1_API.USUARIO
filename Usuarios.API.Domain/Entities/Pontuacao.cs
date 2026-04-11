@@ -2,24 +2,12 @@
 
 public class Pontuacao
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
+    public int FilhoId { get; set; }
+    public int TarefaId { get; set; }
+    public int Pontos { get; set; }
+    public DateTime DataRegistro { get; set; } = DateTime.UtcNow;
 
-    public int FilhoId { get; private set; }
-    public Filho Filho { get; private set; }
-
-    public int TarefaId { get; private set; }
-    public Tarefa Tarefa { get; private set; }
-
-    public int Pontos { get; private set; }
-    public DateTime DataRegistro { get; private set; }
-
-    protected Pontuacao() { }
-
-    public Pontuacao(int filhoId, int tarefaId, int pontos)
-    {
-        FilhoId = filhoId;
-        TarefaId = tarefaId;
-        Pontos = pontos;
-        DataRegistro = DateTime.UtcNow;
-    }
+    public Usuario Filho { get; set; } = null!;
+    public Tarefa Tarefa { get; set; } = null!;
 }

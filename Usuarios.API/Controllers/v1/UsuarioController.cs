@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Usuarios.API.Application.Common.Responses;
-using Usuarios.API.Application.DTOs;
+using Usuarios.API.Application.DTOs.Usuario;
 using Usuarios.API.Application.Interfaces;
-using Usuarios.API.Application.Mapping;
 
 namespace Usuarios.API.Controllers.v1;
 
 [ApiController]
+[Route("api/v1/[controller]")]
 public class UsuarioController : ControllerBase
 {
     private readonly IUsuarioService _service;
@@ -17,47 +17,42 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpGet]
-    [Route("api/v1/[controller]/ObterTodos")]
+    [Route("ObterTodos")]
     public async Task<IActionResult> ObterTodos()
     {
         var usuarios = await _service.ObterTodosAsync();
-
-        return Ok(new ResponseApi<IEnumerable<UsuarioDto>>(usuarios.ToDtoList(), "Usuários obtidos com sucesso"));
+        return Ok(new ResponseApi<IEnumerable<RetornoUsuarioDto>>(usuarios, "Usuários obtidos com sucesso"));
     }
+
     [HttpGet]
-    [Route("api/v1/[controller]/ObterPorId/{id}")]
+    [Route("ObterPorId/{id}")]
     public async Task<IActionResult> ObterPorId(int id)
     {
         var usuario = await _service.ObterPorIdAsync(id);
-
         if (usuario == null)
-        {
-            return NotFound(new ResponseApi<UsuarioDto>(new List<string> { "Usuário não encontrado" }));
-        }
+            return NotFound(new ResponseApi<RetornoUsuarioDto>(new List<string> { "Usuário não encontrado" }));
 
-        return Ok(new ResponseApi<UsuarioDto>(usuario.ToDto(),"Usuário obtido com sucesso"));
+        return Ok(new ResponseApi<RetornoUsuarioDto>(usuario, "Usuário obtido com sucesso"));
     }
 
-
     [HttpPost]
-    [Route("api/v1/[controller]/AdicionarUsuario")]
-    public async Task<IActionResult> Criar([FromBody] UsuarioDto dto)
+    [Route("/AdicionarUsuario")]
+    public async Task<IActionResult> Criar([FromBody] CriarUsuarioDto dto)
     {
         var usuario = await _service.CriarAsync(dto);
-
-        return Ok(new ResponseApi<UsuarioDto>(usuario, "Usuário criado com sucesso"));
+        return Ok(new ResponseApi<RetornoUsuarioDto>(usuario, "Usuário criado com sucesso"));
     }
 
     [HttpPut]
-    [Route("api/v1/[controller]/AtualizarUsuario/{id}")]
-    public async Task<IActionResult> Atualizar(int id, [FromBody] UsuarioDto dto)
+    [Route("AtualizarUsuario/{id}")]
+    public async Task<IActionResult> Atualizar(int id, [FromBody] CriarUsuarioDto dto)
     {
         await _service.AtualizarAsync(id, dto);
         return Ok(new ResponseApi<string>("Usuário atualizado com sucesso"));
     }
 
     [HttpDelete]
-    [Route("api/v1/[controller]/RemoverUsuario/{id}")] 
+    [Route("RemoverUsuario/{id}")]
     public async Task<IActionResult> Remover(int id)
     {
         await _service.RemoverAsync(id);

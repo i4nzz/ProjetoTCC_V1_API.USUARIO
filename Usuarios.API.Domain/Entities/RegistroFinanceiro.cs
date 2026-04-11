@@ -2,30 +2,14 @@
 
 public class RegistroFinanceiro
 {
-    public int Id { get; private set; }
-
-    public int FilhoId { get; private set; }
-    public Filho Filho { get; private set; }
-
-    public int CategoriaId { get; private set; }
-    public CategoriaFinanceira Categoria { get; private set; }
-
-    public int MesadaId { get; private set; }
-    public Mesada Mesada { get; private set; }
-
-    public string Descricao { get; private set; }
-    public decimal Valor { get; private set; }
-    public DateTime DataRegistro { get; private set; }
-
-    protected RegistroFinanceiro() { }
-
-    public RegistroFinanceiro(int filhoId, int categoriaId, int mesadaId, string descricao, decimal valor)
-    {
-        FilhoId = filhoId;
-        CategoriaId = categoriaId;
-        MesadaId = mesadaId;
-        Descricao = descricao;
-        Valor = valor;
-        DataRegistro = DateTime.UtcNow;
-    }
+    public int RegistroId { get; set; }
+    public int FilhoId { get; set; }
+    public int CategoriaId { get; set; }
+    public int MesadaId { get; set; }
+    public string Descricao { get; set; } = string.Empty;
+    public decimal Valor { get; set; }
+    public DateTime DataRegistro { get; set; } = DateTime.UtcNow;
+    public Usuario Filho { get; set; } = null!;
+    public CategoriaFinanceira Categoria { get; set; } = null!;
+    public Mesada Mesada { get; set; } = null!;
 }

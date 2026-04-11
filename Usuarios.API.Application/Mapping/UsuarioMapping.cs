@@ -1,24 +1,24 @@
-﻿using Usuarios.API.Application.DTOs;
+﻿using Usuarios.API.Application.DTOs.Usuario;
 using Usuarios.API.Domain.Entities;
 
-namespace Usuarios.API.Application.Mapping
-{
-    public static class UsuarioMapping
-    {
-        public static UsuarioDto ToDto(this Usuario usuario)
-        {
-            return new UsuarioDto
-            {
-                Nome = usuario.Nome,
-                Email = usuario.Email,
-                Telefone = usuario.Telefone,
-                Ativo = usuario.Ativo
-            };
-        }
+namespace Usuarios.API.Application.Mapping;
 
-        public static IEnumerable<UsuarioDto> ToDtoList(this IEnumerable<Usuario> usuarios)
+public static class UsuarioMapping
+{
+    public static RetornoUsuarioDto ToDto(this Usuario usuario)
+    {
+        return new RetornoUsuarioDto
         {
-            return usuarios.Select(u => u.ToDto());
-        }
+            Id = usuario.Id,
+            Nome = usuario.Nome,
+            Email = usuario.Email,
+            Ativo = usuario.Ativo,
+            Perfil = usuario.Perfil
+        };
+    }
+
+    public static IEnumerable<RetornoUsuarioDto> ToDtoList(this IEnumerable<Usuario> usuarios)
+    {
+        return usuarios.Select(u => u.ToDto());
     }
 }

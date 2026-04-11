@@ -10,7 +10,7 @@ namespace Usuarios.API.Infra.Mappings
         {
             builder.ToTable("categoria_financeira");
 
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.CategoriaFinanceiraId);
 
             builder.Property(x => x.Nome)
                    .IsRequired()
