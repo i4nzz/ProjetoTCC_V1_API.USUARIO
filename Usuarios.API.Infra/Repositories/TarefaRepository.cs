@@ -16,6 +16,7 @@ public class TarefaRepository : ITarefaRepository
     public async Task AdicionarAsync(Tarefa tarefa)
     {
         await _context.Tarefas.AddAsync(tarefa);
+        await _context.SaveChangesAsync();
     }
 
     public async Task AtualizarAsync(Tarefa tarefa)

@@ -9,18 +9,18 @@ namespace Usuarios.API.Controllers.v1;
 [Route("api/v1/[controller]")]
 public class UsuarioController : ControllerBase
 {
-    private readonly IUsuarioService _service;
+    private readonly IUsuarioService _usuarioService;
 
-    public UsuarioController(IUsuarioService service)
+    public UsuarioController(IUsuarioService usuarioService)
     {
-        _service = service;
+        _usuarioService = usuarioService;
     }
 
     [HttpGet]
     [Route("ObterTodos")]
     public async Task<IActionResult> ObterTodos()
     {
-        var usuarios = await _service.ObterTodosAsync();
+        var usuarios = await _usuarioService.ObterTodosAsync();
         return Ok(new ResponseApi<IEnumerable<RetornoUsuarioDto>>(usuarios, "Usuários obtidos com sucesso"));
     }
 
@@ -28,9 +28,9 @@ public class UsuarioController : ControllerBase
     [Route("ObterPorId/{id}")]
     public async Task<IActionResult> ObterPorId(int id)
     {
-        var usuario = await _service.ObterPorIdAsync(id);
+        var usuario = await _usuarioService.ObterPorIdAsync(id);
         if (usuario == null)
-            return NotFound(new ResponseApi<RetornoUsuarioDto>(new List<string> { "Usuário não encontrado" }));
+            return NotFound(ResponseApi<RetornoUsuarioDto>.Erro("Usuário não encontrado"));
 
         return Ok(new ResponseApi<RetornoUsuarioDto>(usuario, "Usuário obtido com sucesso"));
     }
@@ -39,7 +39,7 @@ public class UsuarioController : ControllerBase
     [Route("/AdicionarUsuario")]
     public async Task<IActionResult> Criar([FromBody] CriarUsuarioDto dto)
     {
-        var usuario = await _service.CriarAsync(dto);
+        var usuario = await _usuarioService.CriarAsync(dto);
         return Ok(new ResponseApi<RetornoUsuarioDto>(usuario, "Usuário criado com sucesso"));
     }
 
@@ -47,7 +47,7 @@ public class UsuarioController : ControllerBase
     [Route("AtualizarUsuario/{id}")]
     public async Task<IActionResult> Atualizar(int id, [FromBody] CriarUsuarioDto dto)
     {
-        await _service.AtualizarAsync(id, dto);
+        await _usuarioService.AtualizarAsync(id, dto);
         return Ok(new ResponseApi<string>("Usuário atualizado com sucesso"));
     }
 
@@ -55,7 +55,7 @@ public class UsuarioController : ControllerBase
     [Route("RemoverUsuario/{id}")]
     public async Task<IActionResult> Remover(int id)
     {
-        await _service.RemoverAsync(id);
+        await _usuarioService.RemoverAsync(id);
         return Ok(new ResponseApi<string>("Usuário removido com sucesso"));
     }
 }

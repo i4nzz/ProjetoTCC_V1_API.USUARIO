@@ -22,7 +22,7 @@ public class TarefaController : ControllerBase
         var tarefas = await _tarefaService.ObterTodasAsync();
 
         if (tarefas == null || !tarefas.Any())
-            return NoContent();
+            return NotFound(ResponseApi<RetornoTarefaDto>.Erro("Tarefa não encontrada"));
 
         return Ok(new ResponseApi<IEnumerable<RetornoTarefaDto>>(tarefas, "Tarefas obtidas com sucesso"));
     }
@@ -33,7 +33,7 @@ public class TarefaController : ControllerBase
         var tarefas = await _tarefaService.ObterPorFilhoAsync(filhoId);
 
         if (!tarefas.Any())
-            return NoContent();
+            return NotFound(ResponseApi<RetornoTarefaDto>.Erro("Tarefa não encontrada"));
 
         return Ok(new ResponseApi<IEnumerable<RetornoTarefaDto>>(tarefas));
     }
@@ -44,7 +44,7 @@ public class TarefaController : ControllerBase
         var tarefa = await _tarefaService.ObterPorIdAsync(tarefaId);
 
         if (tarefa == null)
-            return NotFound(new ResponseApi<string>("Tarefa não encontrada"));
+            return NotFound(ResponseApi<RetornoTarefaDto>.Erro("Tarefa não encontrada"));
 
         return Ok(new ResponseApi<RetornoTarefaDto>(tarefa));
     }
@@ -68,23 +68,25 @@ public class TarefaController : ControllerBase
             return BadRequest(new ResponseApi<string>("Dados inválidos"));
 
         var existe = await _tarefaService.ObterPorIdAsync(tarefaId);
+
         if (existe == null)
-            return NotFound(new ResponseApi<string>("Tarefa não encontrada"));
+            return NotFound(ResponseApi<RetornoTarefaDto>.Erro("Tarefa não encontrada"));
 
         await _tarefaService.AtualizarAsync(tarefaId, dto);
 
-        return NoContent();
+        return Ok(ResponseApi<string>.Ok("Tarefa atualizada com sucesso"));
     }
 
     [HttpDelete("{tarefaId:int}")]
     public async Task<IActionResult> Remover(int tarefaId)
     {
         var existe = await _tarefaService.ObterPorIdAsync(tarefaId);
+
         if (existe == null)
             return NotFound(new ResponseApi<string>("Tarefa não encontrada"));
 
         await _tarefaService.RemoverAsync(tarefaId);
 
-        return NoContent();
+        return Ok(new ResponseApi<string>("Tarefa removida com sucesso"));
     }
 }

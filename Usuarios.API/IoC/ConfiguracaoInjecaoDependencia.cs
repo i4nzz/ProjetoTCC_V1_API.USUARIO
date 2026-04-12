@@ -13,11 +13,15 @@ public static class ConfiguracaoInjecaoDeDependencia
         #region Repositories
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<ITarefaRepository, TarefaRepository>();
+        services.AddScoped<IPontuacaoRepository, PontuacaoRepository>();
+        services.AddScoped<IRecompensaRepository, RecompensaRepository>();
         #endregion
 
         #region Services
         services.AddScoped<IUsuarioService, UsuarioService>();
         services.AddScoped<ITarefaService, TarefaService>();
+        services.AddScoped<IPontuacaoService, PontuacaoService>();
+        services.AddScoped<IRecompensaService, RecompensaService>();
         #endregion
 
         return services;

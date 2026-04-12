@@ -1,5 +1,6 @@
 ﻿using Usuarios.API.Application.DTOs.Usuario;
 using Usuarios.API.Application.Interfaces;
+using Usuarios.API.Application.Mapping;
 using Usuarios.API.Domain.Entities;
 using Usuarios.API.Domain.Interfaces;
 
@@ -17,13 +18,13 @@ public class UsuarioService : IUsuarioService
     public async Task<IEnumerable<RetornoUsuarioDto>> ObterTodosAsync()
     {
         var usuarios = await _repository.ObterTodosAsync();
-        return usuarios.Select(MapToDto);
+        return usuarios.ToDtoList();
     }
 
     public async Task<RetornoUsuarioDto?> ObterPorIdAsync(int id)
     {
         var usuario = await _repository.ObterPorIdAsync(id);
-        return usuario == null ? null : MapToDto(usuario);
+        return usuario == null ? null : usuario.ToDto();
     }
 
     public async Task<RetornoUsuarioDto> CriarAsync(CriarUsuarioDto dto)
@@ -31,7 +32,7 @@ public class UsuarioService : IUsuarioService
         var senhaHash = BCrypt.Net.BCrypt.HashPassword(dto.Senha);
         var usuario = new Usuario(dto.Nome, dto.Email, senhaHash, dto.Perfil);
         await _repository.AdicionarAsync(usuario);
-        return MapToDto(usuario);
+        return usuario.ToDto();
     }
 
     public async Task AtualizarAsync(int id, CriarUsuarioDto dto)
@@ -52,17 +53,5 @@ public class UsuarioService : IUsuarioService
             throw new KeyNotFoundException("Usuário não encontrado");
 
         await _repository.RemoverAsync(id);
-    }
-
-    private static RetornoUsuarioDto MapToDto(Usuario usuario)
-    {
-        return new RetornoUsuarioDto
-        {
-            Id = usuario.Id,
-            Nome = usuario.Nome,
-            Email = usuario.Email,
-            Perfil = usuario.Perfil,
-            Ativo = usuario.Ativo
-        };
     }
 }

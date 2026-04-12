@@ -22,6 +22,10 @@ namespace Usuarios.API.Infra.Mappings
                    .WithMany()
                    .HasForeignKey(x => x.FilhoId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(x => x.Ativa)
+                   .IsRequired()
+                   .HasDefaultValue(true);
         }
     }
 
