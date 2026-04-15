@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs.Pontuacao;
 using Usuarios.API.Application.Interfaces;
 
 namespace Usuarios.API.Controllers.v1;
+
 [ApiController]
 [Route("api/v1/[controller]")]
 public class PontuacaoController : ControllerBase
@@ -17,33 +19,65 @@ public class PontuacaoController : ControllerBase
 
     [HttpGet]
     [Route("ObterPorFilho/{filhoId}")]
-    public async Task<IActionResult> ObterPorFilho(int filhoId)
+    public async Task<RespostaMetodos<IEnumerable<RetornoPontuacaoDto>>> ObterPorFilho(int filhoId)
     {
         var pontuacoes = await _pontuacaoService.ObterPorFilhoAsync(filhoId);
 
         if (pontuacoes == null || !pontuacoes.Any())
-            return NotFound(ResponseApi<RetornoPontuacaoDto>.Erro("Nenhuma pontuação encontrada para este filho"));
+        {
+            return new RespostaMetodos<IEnumerable<RetornoPontuacaoDto>>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NoContent,
+                ObjetoRetorno = null,
+                Mensagem = "Nenhuma pontuação encontrada"
+            };
+        }
 
-        return Ok(new ResponseApi<IEnumerable<RetornoPontuacaoDto>>(pontuacoes, "Pontuações obtidas com sucesso"));
+        return new RespostaMetodos<IEnumerable<RetornoPontuacaoDto>>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = pontuacoes
+        };
     }
 
     [HttpGet]
     [Route("ObterTotal/{filhoId}")]
-    public async Task<IActionResult> ObterTotal(int filhoId)
+    public async Task<RespostaMetodos<RetornoPontuacaoDto>> ObterTotal(int filhoId)
     {
         var total = await _pontuacaoService.ObterTotalPontosAsync(filhoId);
 
         if (total == 0)
-            return NoContent();
+        {
+            return new RespostaMetodos<RetornoPontuacaoDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NoContent,
+                ObjetoRetorno = null,
+                Mensagem = "Nenhum ponto encontrado"
+            };
+        }
 
-        return Ok(new ResponseApi<RetornoPontuacaoDto>(new RetornoPontuacaoDto { Pontos = total }, "Total de pontos obtido com sucesso"));
+        return new RespostaMetodos<RetornoPontuacaoDto>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = new RetornoPontuacaoDto { Pontos = total }
+        };
     }
 
     [HttpPost]
     [Route("Adicionar")]
-    public async Task<IActionResult> Adicionar([FromBody] CriarPontuacaoDto dto)
+    public async Task<RespostaMetodos<RetornoPontuacaoDto>> Adicionar([FromBody] CriarPontuacaoDto dto)
     {
         var pontuacao = await _pontuacaoService.AdicionarAsync(dto);
-        return Ok(new ResponseApi<RetornoPontuacaoDto>(pontuacao, "Pontuação adicionada com sucesso"));
+
+        return new RespostaMetodos<RetornoPontuacaoDto>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.Created,
+            ObjetoRetorno = pontuacao
+        };
     }
 }

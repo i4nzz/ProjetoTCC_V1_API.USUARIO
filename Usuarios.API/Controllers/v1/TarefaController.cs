@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs.Tarefa;
 using Usuarios.API.Application.Interfaces;
@@ -17,76 +18,167 @@ public class TarefaController : ControllerBase
     }
 
     [HttpGet("ObterTodas")]
-    public async Task<IActionResult> ObterTodas()
+    public async Task<RespostaMetodos<IEnumerable<RetornoTarefaDto>>> ObterTodas()
     {
         var tarefas = await _tarefaService.ObterTodasAsync();
 
         if (tarefas == null || !tarefas.Any())
-            return NotFound(ResponseApi<RetornoTarefaDto>.Erro("Tarefa não encontrada"));
+        {
+            return new RespostaMetodos<IEnumerable<RetornoTarefaDto>>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NotFound,
+                ObjetoRetorno = null,
+                Mensagem = "Nenhuma tarefa encontrada"
+            };
+        }
 
-        return Ok(new ResponseApi<IEnumerable<RetornoTarefaDto>>(tarefas, "Tarefas obtidas com sucesso"));
+        return new RespostaMetodos<IEnumerable<RetornoTarefaDto>>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = tarefas,
+            Mensagem = "Tarefas obtidas com sucesso"
+        };
     }
 
     [HttpGet("filho/{filhoId:int}")]
-    public async Task<IActionResult> ObterPorFilho(int filhoId)
+    public async Task<RespostaMetodos<IEnumerable<RetornoTarefaDto>>> ObterPorFilho(int filhoId)
     {
         var tarefas = await _tarefaService.ObterPorFilhoAsync(filhoId);
 
-        if (!tarefas.Any())
-            return NotFound(ResponseApi<RetornoTarefaDto>.Erro("Tarefa não encontrada"));
+        if (tarefas == null || !tarefas.Any())
+        {
+            return new RespostaMetodos<IEnumerable<RetornoTarefaDto>>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NotFound,
+                ObjetoRetorno = null,
+                Mensagem = "Nenhuma tarefa encontrada"
+            };
+        }
 
-        return Ok(new ResponseApi<IEnumerable<RetornoTarefaDto>>(tarefas));
+        return new RespostaMetodos<IEnumerable<RetornoTarefaDto>>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = tarefas,
+            Mensagem = "Tarefas obtidas com sucesso"
+        };
     }
 
     [HttpGet("{tarefaId:int}")]
-    public async Task<IActionResult> ObterPorId(int tarefaId)
+    public async Task<RespostaMetodos<RetornoTarefaDto>> ObterPorId(int tarefaId)
     {
         var tarefa = await _tarefaService.ObterPorIdAsync(tarefaId);
 
         if (tarefa == null)
-            return NotFound(ResponseApi<RetornoTarefaDto>.Erro("Tarefa não encontrada"));
+        {
+            return new RespostaMetodos<RetornoTarefaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NotFound,
+                ObjetoRetorno = null,
+                Mensagem = "Tarefa não encontrada"
+            };
+        }
 
-        return Ok(new ResponseApi<RetornoTarefaDto>(tarefa));
+        return new RespostaMetodos<RetornoTarefaDto>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = tarefa,
+            Mensagem = "Tarefa obtida com sucesso"
+        };
     }
 
     [HttpPost("CriarTarefa")]
-    public async Task<IActionResult> Criar([FromBody] CriarTarefaDto dto)
+    public async Task<RespostaMetodos<RetornoTarefaDto>> Criar([FromBody] CriarTarefaDto dto)
     {
         if (!ModelState.IsValid)
-            return BadRequest(new ResponseApi<string>("Dados inválidos"));
+        {
+            return new RespostaMetodos<RetornoTarefaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.BadRequest,
+                ObjetoRetorno = null,
+                Mensagem = "Dados inválidos"
+            };
+        }
 
         var tarefa = await _tarefaService.CriarAsync(dto);
 
-        return CreatedAtAction(nameof(ObterPorId), new { tarefaId = tarefa.TarefaId }, new ResponseApi<RetornoTarefaDto>(tarefa, "Tarefa criada com sucesso")
-        );
+        return new RespostaMetodos<RetornoTarefaDto>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.Created,
+            ObjetoRetorno = tarefa,
+            Mensagem = "Tarefa criada com sucesso"
+        };
     }
 
     [HttpPut("{tarefaId:int}")]
-    public async Task<IActionResult> Atualizar(int tarefaId, [FromBody] CriarTarefaDto dto)
+    public async Task<RespostaMetodos<string>> Atualizar(int tarefaId, [FromBody] CriarTarefaDto dto)
     {
         if (!ModelState.IsValid)
-            return BadRequest(new ResponseApi<string>("Dados inválidos"));
+        {
+            return new RespostaMetodos<string>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.BadRequest,
+                ObjetoRetorno = null,
+                Mensagem = "Dados inválidos"
+            };
+        }
 
         var existe = await _tarefaService.ObterPorIdAsync(tarefaId);
 
         if (existe == null)
-            return NotFound(ResponseApi<RetornoTarefaDto>.Erro("Tarefa não encontrada"));
+        {
+            return new RespostaMetodos<string>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NotFound,
+                ObjetoRetorno = null,
+                Mensagem = "Tarefa não encontrada"
+            };
+        }
 
         await _tarefaService.AtualizarAsync(tarefaId, dto);
 
-        return Ok(ResponseApi<string>.Ok("Tarefa atualizada com sucesso"));
+        return new RespostaMetodos<string>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = "OK",
+            Mensagem = "Tarefa atualizada com sucesso"
+        };
     }
 
     [HttpDelete("{tarefaId:int}")]
-    public async Task<IActionResult> Remover(int tarefaId)
+    public async Task<RespostaMetodos<string>> Remover(int tarefaId)
     {
         var existe = await _tarefaService.ObterPorIdAsync(tarefaId);
 
         if (existe == null)
-            return NotFound(new ResponseApi<string>("Tarefa não encontrada"));
+        {
+            return new RespostaMetodos<string>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NotFound,
+                ObjetoRetorno = null,
+                Mensagem = "Tarefa não encontrada"
+            };
+        }
 
         await _tarefaService.RemoverAsync(tarefaId);
 
-        return Ok(new ResponseApi<string>("Tarefa removida com sucesso"));
+        return new RespostaMetodos<string>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = "OK",
+            Mensagem = "Tarefa removida com sucesso"
+        };
     }
 }

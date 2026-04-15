@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs.Usuario;
 using Usuarios.API.Application.Interfaces;
@@ -18,44 +19,98 @@ public class UsuarioController : ControllerBase
 
     [HttpGet]
     [Route("ObterTodos")]
-    public async Task<IActionResult> ObterTodos()
+    public async Task<RespostaMetodos<IEnumerable<RetornoUsuarioDto>>> ObterTodos()
     {
         var usuarios = await _usuarioService.ObterTodosAsync();
-        return Ok(new ResponseApi<IEnumerable<RetornoUsuarioDto>>(usuarios, "Usuários obtidos com sucesso"));
+
+        if (usuarios == null || !usuarios.Any())
+        {
+            return new RespostaMetodos<IEnumerable<RetornoUsuarioDto>>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NoContent,
+                ObjetoRetorno = null,
+                Mensagem = "Nenhum usuário encontrado"
+            };
+        }
+
+        return new RespostaMetodos<IEnumerable<RetornoUsuarioDto>>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = usuarios,
+            Mensagem = "Usuários obtidos com sucesso"
+        };
     }
 
     [HttpGet]
     [Route("ObterPorId/{id}")]
-    public async Task<IActionResult> ObterPorId(int id)
+    public async Task<RespostaMetodos<RetornoUsuarioDto>> ObterPorId(int id)
     {
         var usuario = await _usuarioService.ObterPorIdAsync(id);
-        if (usuario == null)
-            return NotFound(ResponseApi<RetornoUsuarioDto>.Erro("Usuário não encontrado"));
 
-        return Ok(new ResponseApi<RetornoUsuarioDto>(usuario, "Usuário obtido com sucesso"));
+        if (usuario == null)
+        {
+            return new RespostaMetodos<RetornoUsuarioDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.NotFound,
+                ObjetoRetorno = null,
+                Mensagem = "Usuário não encontrado"
+            };
+        }
+
+        return new RespostaMetodos<RetornoUsuarioDto>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = usuario,
+            Mensagem = "Usuário obtido com sucesso"
+        };
     }
 
     [HttpPost]
-    [Route("/AdicionarUsuario")]
-    public async Task<IActionResult> Criar([FromBody] CriarUsuarioDto dto)
+    [Route("AdicionarUsuario")]
+    public async Task<RespostaMetodos<RetornoUsuarioDto>> Criar([FromBody] CriarUsuarioDto dto)
     {
         var usuario = await _usuarioService.CriarAsync(dto);
-        return Ok(new ResponseApi<RetornoUsuarioDto>(usuario, "Usuário criado com sucesso"));
+
+        return new RespostaMetodos<RetornoUsuarioDto>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.Created,
+            ObjetoRetorno = usuario,
+            Mensagem = "Usuário criado com sucesso"
+        };
     }
 
     [HttpPut]
     [Route("AtualizarUsuario/{id}")]
-    public async Task<IActionResult> Atualizar(int id, [FromBody] CriarUsuarioDto dto)
+    public async Task<RespostaMetodos<string>> Atualizar(int id, [FromBody] CriarUsuarioDto dto)
     {
         await _usuarioService.AtualizarAsync(id, dto);
-        return Ok(new ResponseApi<string>("Usuário atualizado com sucesso"));
+
+        return new RespostaMetodos<string>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = "OK",
+            Mensagem = "Usuário atualizado com sucesso"
+        };
     }
 
     [HttpDelete]
     [Route("RemoverUsuario/{id}")]
-    public async Task<IActionResult> Remover(int id)
+    public async Task<RespostaMetodos<string>> Remover(int id)
     {
         await _usuarioService.RemoverAsync(id);
-        return Ok(new ResponseApi<string>("Usuário removido com sucesso"));
+
+        return new RespostaMetodos<string>
+        {
+            Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
+            ObjetoRetorno = "OK",
+            Mensagem = "Usuário removido com sucesso"
+        };
     }
 }
