@@ -21,7 +21,7 @@ namespace Usuarios.API.Infra.Mappings
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Recompensa)
-                   .WithMany()
+                   .WithMany(r => r.RecompensasResgatadas)
                    .HasForeignKey(x => x.RecompensaId)
                    .OnDelete(DeleteBehavior.Restrict);
         }

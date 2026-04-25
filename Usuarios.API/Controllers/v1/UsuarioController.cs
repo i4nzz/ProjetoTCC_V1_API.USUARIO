@@ -68,7 +68,7 @@ public class UsuarioController : ControllerBase
     [HttpPut]
     [Route("AtualizarUsuario/{id}")]
     [AllowAnonymous]
-    public async Task<IActionResult> Atualizar(int id, [FromBody] CriarUsuarioDto dto)
+    public async Task<IActionResult> Atualizar(int id, [FromBody] AtualizarUsuarioDto dto)
     {
         if (!ModelState.IsValid)
         {

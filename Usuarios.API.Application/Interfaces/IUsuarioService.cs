@@ -8,7 +8,7 @@ namespace Usuarios.API.Application.Interfaces
         Task<RespostaMetodos<IEnumerable<RetornoUsuarioDto>>> ObterTodosAsync();
         Task<RespostaMetodos<RetornoUsuarioDto?>> ObterPorIdAsync(int id);
         Task<RespostaMetodos<RetornoUsuarioDto>> CriarUsuarioAsync(CriarUsuarioDto dto);
-        Task<RespostaMetodos<RetornoUsuarioDto>> AtualizarAsync(int id, CriarUsuarioDto dto);
+        Task<RespostaMetodos<RetornoUsuarioDto>> AtualizarAsync(int id, AtualizarUsuarioDto dto);
         Task<RespostaMetodos<RetornoUsuarioDto>> RemoverAsync(int id);
         Task<RespostaMetodos<RetornoUsuarioDto>> CriarFilhoAsync(CriarFilhoDto dto);
         Task<RespostaMetodos<RetornoLoginDto>> LoginAsync(LoginDto dto);

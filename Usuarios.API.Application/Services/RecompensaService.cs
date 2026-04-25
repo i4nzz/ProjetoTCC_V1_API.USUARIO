@@ -1,4 +1,5 @@
-﻿using Usuarios.API.Application.Common.Responses;
+﻿using System.Net;
+using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs.Recompensa;
 using Usuarios.API.Application.Interfaces;
 using Usuarios.API.Application.Mapping;
@@ -44,6 +45,7 @@ public class RecompensaService : IRecompensaService
         {
             Sucesso = true,
             ObjetoRetorno = retornoRecompensas,
+            StatusCode = HttpStatusCode.OK,
             Mensagem = "Recompensas obtidas com sucesso."
         };
     }
@@ -68,6 +70,7 @@ public class RecompensaService : IRecompensaService
         {
             Sucesso = true,
             ObjetoRetorno = retornoRecompensa,
+            StatusCode = HttpStatusCode.OK,
             Mensagem = "Recompensa obtida com sucesso."
         };
     }
@@ -112,6 +115,7 @@ public class RecompensaService : IRecompensaService
         {
             Sucesso = true,
             ObjetoRetorno = retornoRecompensa,
+            StatusCode = HttpStatusCode.Created,
             Mensagem = "Recompensa criada com sucesso."
         };
     }
@@ -140,6 +144,7 @@ public class RecompensaService : IRecompensaService
         {
             Sucesso = true,
             ObjetoRetorno = retornoRecompensa,
+            StatusCode = HttpStatusCode.OK,
             Mensagem = "Recompensa atualizada com sucesso."
         };
     }
@@ -162,6 +167,7 @@ public class RecompensaService : IRecompensaService
         return new RespostaMetodos<RetornoRecompensaDto>
         {
             Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
             Mensagem = "Recompensa removida com sucesso."
         };
     }
@@ -211,6 +217,7 @@ public class RecompensaService : IRecompensaService
         {
             Sucesso = true,
             ObjetoRetorno = retornoResgatada,
+            StatusCode = HttpStatusCode.OK,
             Mensagem = "Recompensa resgatada com sucesso."
         };
     }
@@ -234,6 +241,7 @@ public class RecompensaService : IRecompensaService
         return new RespostaMetodos<IEnumerable<RetornoRecompensaResgatadaDto>>
         {
             Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
             ObjetoRetorno = retornoResgatadas,
             Mensagem = "Recompensas resgatadas obtidas com sucesso."
         };

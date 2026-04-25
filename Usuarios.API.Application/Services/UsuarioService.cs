@@ -87,7 +87,7 @@ public class UsuarioService : IUsuarioService
         };
     }
 
-    public async Task<RespostaMetodos<RetornoUsuarioDto>> AtualizarAsync(int id, CriarUsuarioDto dto)
+    public async Task<RespostaMetodos<RetornoUsuarioDto>> AtualizarAsync(int id, AtualizarUsuarioDto dto)
     {
         var usuario = await _usuarioRepository.ObterPorIdAsync(id);
         if (usuario == null)

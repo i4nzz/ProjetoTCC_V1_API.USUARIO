@@ -17,6 +17,7 @@ public class RecompensaRepository : IRecompensaRepository
     public async Task<IEnumerable<Recompensa>> ObterPorFilhoAsync(int filhoId)
     {
         return await _contexto.Recompensas
+            .Include(r => r.Filho)
             .Where(r => r.FilhoId == filhoId && r.Ativa)
             .ToListAsync();
     }
