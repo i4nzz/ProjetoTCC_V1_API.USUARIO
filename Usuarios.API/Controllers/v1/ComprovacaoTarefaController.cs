@@ -1,6 +1,6 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs.Recompensa;
 using Usuarios.API.Application.Interfaces;
 
@@ -18,107 +18,61 @@ public class ComprovacaoTarefaController : ControllerBase
     }
 
     [HttpGet("tarefa/{tarefaId:int}")]
-    public async Task<RespostaMetodos<IEnumerable<RetornoComprovacaoDto>>> ObterPorTarefa(int tarefaId)
+    public async Task<IActionResult> ObterPorTarefa(int tarefaId)
     {
-        var comprovacoes = await _comprovacaoTarefaService.ObterPorTarefaAsync(tarefaId);
+        var resultado = await _comprovacaoTarefaService.ObterPorTarefaAsync(tarefaId);
 
-        if (comprovacoes == null || !comprovacoes.Any())
+        if (!resultado.Sucesso)
         {
-            return new RespostaMetodos<IEnumerable<RetornoComprovacaoDto>>
-            {
-                Sucesso = false,
-                StatusCode = HttpStatusCode.NotFound,
-                ObjetoRetorno = null,
-                Mensagem = "Nenhuma comprovação encontrada"
-            };
+            return StatusCode((int)HttpStatusCode.BadRequest, resultado.Mensagem);
         }
 
-        return new RespostaMetodos<IEnumerable<RetornoComprovacaoDto>>
-        {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = comprovacoes,
-            Mensagem = "Comprovações obtidas com sucesso"
-        };
+        return StatusCode((int)resultado.StatusCode, resultado);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<RespostaMetodos<RetornoComprovacaoDto>> ObterPorId(int id)
+    public async Task<IActionResult> ObterPorId(int id)
     {
-        var comprovacao = await _comprovacaoTarefaService.ObterPorIdAsync(id);
+        var resultado = await _comprovacaoTarefaService.ObterPorIdAsync(id);
 
-        if (comprovacao == null)
+        if (!resultado.Sucesso)
         {
-            return new RespostaMetodos<RetornoComprovacaoDto>
-            {
-                Sucesso = false,
-                StatusCode = HttpStatusCode.NotFound,
-                ObjetoRetorno = null,
-                Mensagem = "Comprovação não encontrada"
-            };
+            return StatusCode((int)HttpStatusCode.BadRequest, resultado.Mensagem);
         }
 
-
-        return new RespostaMetodos<RetornoComprovacaoDto>
-        {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = comprovacao,
-            Mensagem = "Comprovação obtida com sucesso"
-        };
+        return StatusCode((int)HttpStatusCode.OK, resultado.ObjetoRetorno);
     }
 
-    [HttpPost("Enviar")]
-    public async Task<RespostaMetodos<RetornoComprovacaoDto>> Enviar([FromBody] CriarComprovacaoDto dto)
+    [HttpPost("enviar")]
+    [Authorize(Roles = "Filho")]
+    public async Task<IActionResult> Enviar([FromBody] CriarComprovacaoDto dto)
     {
         if (!ModelState.IsValid)
         {
-            return new RespostaMetodos<RetornoComprovacaoDto>
-            {
-                Sucesso = false,
-                StatusCode = HttpStatusCode.BadRequest,
-                ObjetoRetorno = null,
-                Mensagem = "Dados inválidos"
-            };
+            return StatusCode((int)HttpStatusCode.BadRequest);
         }
 
+        var resultado = await _comprovacaoTarefaService.EnviarAsync(dto);
 
-        var comprovacao = await _comprovacaoTarefaService.EnviarAsync(dto);
-
-        return new RespostaMetodos<RetornoComprovacaoDto>
+        if (!resultado.Sucesso)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.Created,
-            ObjetoRetorno = comprovacao,
-            Mensagem = "Comprovação enviada com sucesso"
-        };
+            return StatusCode((int)HttpStatusCode.BadRequest, resultado.Mensagem);
+        }
+
+        return StatusCode((int)(resultado.StatusCode == 0 ? HttpStatusCode.Created : resultado.StatusCode), resultado);
     }
 
-    [HttpPatch("Validar/{id:int}")]
-    public async Task<RespostaMetodos<RetornoComprovacaoDto>> Validar(int id)
+    [HttpPatch("validar/{id:int}")]
+    [Authorize(Roles = "Pai")]
+    public async Task<IActionResult> Validar(int id)
     {
-        var comprovacao = await _comprovacaoTarefaService.ObterPorIdAsync(id);
-
-        if (comprovacao == null)
-        {
-            return new RespostaMetodos<RetornoComprovacaoDto>
-            {
-                Sucesso = false,
-                StatusCode = HttpStatusCode.NotFound,
-                ObjetoRetorno = null,
-                Mensagem = "Comprovação não encontrada"
-            };
-        }
-
-
         var resultado = await _comprovacaoTarefaService.ValidarAsync(id);
 
-        return new RespostaMetodos<RetornoComprovacaoDto>
+        if (!resultado.Sucesso)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = resultado,
-            Mensagem = "Comprovação validada com sucesso"
-        };
+            return StatusCode((int)HttpStatusCode.BadRequest, resultado.Mensagem);
+        }
+
+        return StatusCode((int)resultado.StatusCode, resultado.ObjetoRetorno);
     }
 }

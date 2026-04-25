@@ -16,6 +16,7 @@ public static class ConfiguracaoInjecaoDeDependencia
         services.AddScoped<IPontuacaoService, PontuacaoService>();
         services.AddScoped<IRecompensaService, RecompensaService>();
         services.AddScoped<IComprovacaoService, ComprovacaoService>();
+        services.AddScoped<ITokenService, TokenService>();
         #endregion
 
         #region Repositories

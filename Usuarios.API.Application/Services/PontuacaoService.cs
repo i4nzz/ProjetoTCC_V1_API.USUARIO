@@ -1,4 +1,5 @@
-﻿using Usuarios.API.Application.DTOs.Pontuacao;
+﻿using Usuarios.API.Application.Common.Responses;
+using Usuarios.API.Application.DTOs.Pontuacao;
 using Usuarios.API.Application.Interfaces;
 using Usuarios.API.Application.Mapping;
 using Usuarios.API.Domain.Entities;
@@ -8,25 +9,91 @@ namespace Usuarios.API.Application.Services;
 public class PontuacaoService : IPontuacaoService
 {
     private readonly IPontuacaoRepository _pontuacaoRepository;
+    private readonly IUsuarioRepository _usuarioRepository;
+    private readonly ITarefaRepository _tarefaRepository;
 
-    public PontuacaoService(IPontuacaoRepository pontuacaoRepository)
+    public PontuacaoService(
+        IPontuacaoRepository pontuacaoRepository
+        , IUsuarioRepository usuarioRepository
+        , ITarefaRepository tarefaRepository
+        )
     {
         _pontuacaoRepository = pontuacaoRepository;
+        _usuarioRepository = usuarioRepository;
+        _tarefaRepository = tarefaRepository;
     }
 
-    public async Task<IEnumerable<RetornoPontuacaoDto>> ObterPorFilhoAsync(int filhoId)
+    public async Task<RespostaMetodos<IEnumerable<RetornoPontuacaoDto>>> ObterPorFilhoAsync(int filhoId)
     {
         var pontuacoes = await _pontuacaoRepository.ObterPorFilhoAsync(filhoId);
-        return pontuacoes.ToDtoList();
+
+        if (pontuacoes == null || !pontuacoes.Any())
+        {
+            return new RespostaMetodos<IEnumerable<RetornoPontuacaoDto>>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Nenhuma pontuação encontrada"
+            };
+        }
+        var retornoPontuacoes = pontuacoes.Select(p => p.ToDto()).ToList();
+
+        return new RespostaMetodos<IEnumerable<RetornoPontuacaoDto>>
+        {
+            Sucesso = true,
+            ObjetoRetorno = retornoPontuacoes,
+            Mensagem = "Pontuações encontradas"
+        };
     }
 
-    public async Task<int> ObterTotalPontosAsync(int filhoId)
+    public async Task<RespostaMetodos<int>> ObterTotalPontosAsync(int filhoId)
     {
-        return await _pontuacaoRepository.ObterTotalPontosAsync(filhoId);
+        var totalPontos = await _pontuacaoRepository.ObterTotalPontosAsync(filhoId);
+
+        if (totalPontos <= 0)
+        {
+            return new RespostaMetodos<int>
+            {
+                Sucesso = false,
+                ObjetoRetorno = 0,
+                Mensagem = "Nenhum ponto encontrado"
+            };
+        }
+
+        return new RespostaMetodos<int>
+        {
+            Sucesso = true,
+            ObjetoRetorno = totalPontos,
+            Mensagem = $"Pontos encontrados para o filhoId {filhoId}"
+        };
     }
 
-    public async Task<RetornoPontuacaoDto> AdicionarAsync(CriarPontuacaoDto dto)
+    public async Task<RespostaMetodos<RetornoPontuacaoDto>> AdicionarAsync(CriarPontuacaoDto dto)
     {
+        var usuario = await _usuarioRepository.ObterPorIdAsync(dto.FilhoId);
+
+        if (usuario == null)
+        {
+            return new RespostaMetodos<RetornoPontuacaoDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Usuário não encontrado"
+            };
+        }
+
+        var tarefa = _tarefaRepository.ObterPorIdAsync(dto.TarefaId);
+
+        if (tarefa == null)
+        {
+            return new RespostaMetodos<RetornoPontuacaoDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Tarefa não encontrada"
+            };
+        }
+
         var pontuacao = new Pontuacao
         {
             FilhoId = dto.FilhoId,
@@ -35,6 +102,14 @@ public class PontuacaoService : IPontuacaoService
         };
 
         await _pontuacaoRepository.AdicionarAsync(pontuacao);
-        return pontuacao.ToDto();
+
+        var retornoPontuacao = pontuacao.ToDto();
+
+        return new RespostaMetodos<RetornoPontuacaoDto>
+        {
+            Sucesso = true,
+            ObjetoRetorno = retornoPontuacao,
+            Mensagem = "Pontuação adicionada com sucesso"
+        };
     }
 }

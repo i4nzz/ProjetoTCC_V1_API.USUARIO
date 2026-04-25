@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs.Recompensa;
 using Usuarios.API.Application.Interfaces;
 
@@ -19,128 +18,102 @@ public class RecompensaController : ControllerBase
 
     [HttpGet]
     [Route("ObterPorFilho/{filhoId}")]
-    public async Task<RespostaMetodos<IEnumerable<RetornoRecompensaDto>>> ObterPorFilho(int filhoId)
+    public async Task<IActionResult> ObterPorFilho(int filhoId)
     {
         var recompensas = await _recompensaService.ObterPorFilhoAsync(filhoId);
 
-        if (recompensas == null || !recompensas.Any())
+        if (!recompensas.Sucesso)
         {
-            return new RespostaMetodos<IEnumerable<RetornoRecompensaDto>>
-            {
-                Sucesso = false,
-                StatusCode = HttpStatusCode.NoContent,
-                ObjetoRetorno = null,
-                Mensagem = $"Nenhuma recompensa encontrada para o filhoId {filhoId}."
-            };
+            return StatusCode((int)HttpStatusCode.BadRequest, recompensas);
         }
 
-        return new RespostaMetodos<IEnumerable<RetornoRecompensaDto>>
-        {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = recompensas,
-            Mensagem = $"Recompensas encontradas para o filhoId {filhoId}."
-        };
+        return StatusCode((int)HttpStatusCode.OK, recompensas);
     }
 
     [HttpGet]
     [Route("ObterPorId/{id}")]
-    public async Task<RespostaMetodos<RetornoRecompensaDto>> ObterPorId(int id)
+    public async Task<IActionResult> ObterPorId(int id)
     {
         var recompensa = await _recompensaService.ObterPorIdAsync(id);
 
-        if (recompensa == null)
+        if (!recompensa.Sucesso)
         {
-            return new RespostaMetodos<RetornoRecompensaDto>
-            {
-                Sucesso = false,
-                StatusCode = HttpStatusCode.NotFound,
-                ObjetoRetorno = null,
-                Mensagem = "Recompensa não encontrada"
-            };
+            return StatusCode((int)HttpStatusCode.BadRequest, recompensa);
         }
 
-        return new RespostaMetodos<RetornoRecompensaDto>
-        {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = recompensa,
-            Mensagem = "Recompensa obtida com sucesso"
-        };
+        return StatusCode((int)HttpStatusCode.OK, recompensa);
+
     }
 
     [HttpPost]
     [Route("Criar")]
-    public async Task<RespostaMetodos<RetornoRecompensaDto>> Criar([FromBody] CriarRecompensaDto dto)
+    public async Task<IActionResult> Criar([FromBody] CriarRecompensaDto dto)
     {
         var recompensa = await _recompensaService.CriarAsync(dto);
 
-        return new RespostaMetodos<RetornoRecompensaDto>
+        if (!recompensa.Sucesso)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.Created,
-            ObjetoRetorno = recompensa,
-            Mensagem = "Recompensa criada com sucesso"
-        };
+            return StatusCode((int)HttpStatusCode.BadRequest, recompensa);
+        }
+
+        return StatusCode((int)HttpStatusCode.Created, recompensa);
     }
 
     [HttpPut]
     [Route("Atualizar/{id}")]
-    public async Task<RespostaMetodos<string>> Atualizar(int id, [FromBody] CriarRecompensaDto dto)
+    public async Task<IActionResult> Atualizar(int id, [FromBody] CriarRecompensaDto dto)
     {
-        await _recompensaService.AtualizarAsync(id, dto);
+        var atualizado = await _recompensaService.AtualizarAsync(id, dto);
 
-        return new RespostaMetodos<string>
+        if (!atualizado.Sucesso)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = "OK",
-            Mensagem = "Recompensa atualizada com sucesso"
-        };
+            return StatusCode((int)HttpStatusCode.BadRequest, atualizado);
+        }
+
+        return StatusCode((int)HttpStatusCode.OK, atualizado);
     }
 
     [HttpDelete]
     [Route("Remover/{id}")]
-    public async Task<RespostaMetodos<string>> Remover(int id)
+    public async Task<IActionResult> Remover(int id)
     {
-        await _recompensaService.RemoverAsync(id);
+        var removido = await _recompensaService.RemoverAsync(id);
 
-        return new RespostaMetodos<string>
+        if (!removido.Sucesso)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = "OK",
-            Mensagem = "Recompensa removida com sucesso"
-        };
+            return StatusCode((int)HttpStatusCode.BadRequest, removido);
+        }
+
+        return StatusCode((int)HttpStatusCode.OK, removido);
     }
 
     [HttpPost]
     [Route("Resgatar/{filhoId}/{recompensaId}")]
-    public async Task<RespostaMetodos<RetornoRecompensaResgatadaDto>> Resgatar(int filhoId, int recompensaId)
+    public async Task<IActionResult> Resgatar(int filhoId, int recompensaId)
     {
         var resgatada = await _recompensaService.ResgatarAsync(filhoId, recompensaId);
 
-        return new RespostaMetodos<RetornoRecompensaResgatadaDto>
+        if (!resgatada.Sucesso)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = resgatada,
-            Mensagem = "Recompensa resgatada com sucesso"
-        };
+            return StatusCode((int)HttpStatusCode.BadRequest, resgatada);
+        }
+
+        return StatusCode((int)HttpStatusCode.OK, resgatada);
     }
 
     [HttpGet]
     [Route("ObterResgatadas/{filhoId}")]
-    public async Task<RespostaMetodos<IEnumerable<RetornoRecompensaResgatadaDto>>> ObterResgatadas(int filhoId)
+    public async Task<IActionResult> ObterResgatadas(int filhoId)
     {
         var resgatadas = await _recompensaService.ObterResgatadasPorFilhoAsync(filhoId);
 
-        return new RespostaMetodos<IEnumerable<RetornoRecompensaResgatadaDto>>
+        if (!resgatadas.Sucesso)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = resgatadas,
-            Mensagem = "Recompensas resgatadas obtidas com sucesso"
-        };
+            return StatusCode((int)HttpStatusCode.BadRequest, resgatadas);
+        }
+
+        return StatusCode((int)HttpStatusCode.OK, resgatadas);
     }
+
+
 }

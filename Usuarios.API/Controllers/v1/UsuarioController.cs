@@ -1,6 +1,6 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs.Usuario;
 using Usuarios.API.Application.Interfaces;
 
@@ -19,98 +19,104 @@ public class UsuarioController : ControllerBase
 
     [HttpGet]
     [Route("ObterTodos")]
-    public async Task<RespostaMetodos<IEnumerable<RetornoUsuarioDto>>> ObterTodos()
+    public async Task<IActionResult> ObterTodos()
     {
         var usuarios = await _usuarioService.ObterTodosAsync();
 
-        if (usuarios == null || !usuarios.Any())
+        if (!usuarios.Sucesso)
         {
-            return new RespostaMetodos<IEnumerable<RetornoUsuarioDto>>
-            {
-                Sucesso = false,
-                StatusCode = HttpStatusCode.NoContent,
-                ObjetoRetorno = null,
-                Mensagem = "Nenhum usuário encontrado"
-            };
+            return StatusCode((int)HttpStatusCode.NotFound, usuarios);
         }
 
-        return new RespostaMetodos<IEnumerable<RetornoUsuarioDto>>
-        {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = usuarios,
-            Mensagem = "Usuários obtidos com sucesso"
-        };
+        return StatusCode((int)HttpStatusCode.OK, usuarios.ObjetoRetorno);
     }
 
     [HttpGet]
     [Route("ObterPorId/{id}")]
-    public async Task<RespostaMetodos<RetornoUsuarioDto>> ObterPorId(int id)
+    public async Task<IActionResult> ObterPorId(int id)
     {
         var usuario = await _usuarioService.ObterPorIdAsync(id);
 
-        if (usuario == null)
+        if (!usuario.Sucesso)
         {
-            return new RespostaMetodos<RetornoUsuarioDto>
-            {
-                Sucesso = false,
-                StatusCode = HttpStatusCode.NotFound,
-                ObjetoRetorno = null,
-                Mensagem = "Usuário não encontrado"
-            };
+            return StatusCode((int)HttpStatusCode.NotFound, usuario);
         }
 
-        return new RespostaMetodos<RetornoUsuarioDto>
-        {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = usuario,
-            Mensagem = "Usuário obtido com sucesso"
-        };
+        return StatusCode((int)HttpStatusCode.OK, usuario.ObjetoRetorno);
     }
 
     [HttpPost]
     [Route("AdicionarUsuario")]
-    public async Task<RespostaMetodos<RetornoUsuarioDto>> Criar([FromBody] CriarUsuarioDto dto)
+    [AllowAnonymous]
+    public async Task<IActionResult> Criar([FromBody] CriarUsuarioDto dto)
     {
-        var usuario = await _usuarioService.CriarAsync(dto);
-
-        return new RespostaMetodos<RetornoUsuarioDto>
+        if (!ModelState.IsValid)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.Created,
-            ObjetoRetorno = usuario,
-            Mensagem = "Usuário criado com sucesso"
-        };
+            return BadRequest(ModelState);
+        }
+
+        var usuario = await _usuarioService.CriarUsuarioAsync(dto);
+
+        if (!usuario.Sucesso)
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest, usuario);
+        }
+
+        return StatusCode((int)HttpStatusCode.Created, usuario.ObjetoRetorno);
     }
 
     [HttpPut]
     [Route("AtualizarUsuario/{id}")]
-    public async Task<RespostaMetodos<string>> Atualizar(int id, [FromBody] CriarUsuarioDto dto)
+    [AllowAnonymous]
+    public async Task<IActionResult> Atualizar(int id, [FromBody] CriarUsuarioDto dto)
     {
-        await _usuarioService.AtualizarAsync(id, dto);
-
-        return new RespostaMetodos<string>
+        if (!ModelState.IsValid)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = "OK",
-            Mensagem = "Usuário atualizado com sucesso"
-        };
+            return BadRequest(ModelState);
+        }
+
+        var usuario = await _usuarioService.AtualizarAsync(id, dto);
+
+        if (!usuario.Sucesso)
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest, usuario);
+        }
+
+        return StatusCode((int)HttpStatusCode.OK, usuario.ObjetoRetorno);
     }
 
     [HttpDelete]
     [Route("RemoverUsuario/{id}")]
-    public async Task<RespostaMetodos<string>> Remover(int id)
+    [AllowAnonymous]
+    public async Task<IActionResult> Remover(int id)
     {
-        await _usuarioService.RemoverAsync(id);
+        var usuario = await _usuarioService.RemoverAsync(id);
 
-        return new RespostaMetodos<string>
+        if (!usuario.Sucesso)
         {
-            Sucesso = true,
-            StatusCode = HttpStatusCode.OK,
-            ObjetoRetorno = "OK",
-            Mensagem = "Usuário removido com sucesso"
-        };
+            return StatusCode((int)HttpStatusCode.BadRequest, usuario);
+        }
+
+        return StatusCode((int)HttpStatusCode.OK, usuario.ObjetoRetorno);
+    }
+
+    [HttpPost]
+    [Route("AdicionarFilho")]
+    [Authorize(Roles = "Pai")]
+    public async Task<IActionResult> CriarFilho([FromBody] CriarFilhoDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var resultado = await _usuarioService.CriarFilhoAsync(dto);
+
+        if (!resultado.Sucesso)
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest, resultado);
+        }
+
+        return StatusCode((int)HttpStatusCode.Created, resultado.ObjetoRetorno);
     }
 }
