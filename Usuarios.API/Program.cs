@@ -42,12 +42,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Controller
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 // Swagger com suporte a JWT
 builder.Services.AddSwaggerGen(c =>
 {
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "API.ProjetoTCC.V1.GestaoTarefas",
+        Version = "v1",
+        Description = "Sistema de gerenciamento de tarefas domésticas com gamificação, incluindo pontuação, recompensas e controle entre pais e filhos."
+    });
+
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -79,6 +87,13 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
+
+
+app.UseSwaggerUI(c =>
+{
+    c.DocumentTitle = "KidTask Docs";
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "KidTask API v1");
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
