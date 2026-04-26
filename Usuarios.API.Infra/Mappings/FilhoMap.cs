@@ -2,17 +2,15 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Usuarios.API.Domain.Entities;
 
-namespace Usuarios.API.Infra.Mappings
+namespace Usuarios.API.Infra.Mappings;
+
+public class FilhoMap : IEntityTypeConfiguration<Filho>
 {
-    public class FilhoMap : IEntityTypeConfiguration<Filho>
+    public void Configure(EntityTypeBuilder<Filho> builder)
     {
-        public void Configure(EntityTypeBuilder<Filho> builder)
-        {
-            builder.ToTable("filho");
+        builder.ToTable("filho");
 
-            builder.Property(x => x.DataNascimento)
-                   .IsRequired();
-        }
+        builder.Property(x => x.DataNascimento)
+            .IsRequired();
     }
-
 }

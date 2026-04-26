@@ -20,6 +20,16 @@ public class UsuarioRepository : IUsuarioRepository
         return await _context.Usuarios.FirstOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task AdicionarFilhoAsync(Filho filho, PaisFilhos vinculo)
+    {
+        await _context.Filhos.AddAsync(filho);
+        await _context.SaveChangesAsync(); // salva primeiro para gerar o Id
+
+        var paisFilhos = new PaisFilhos(vinculo.PaiId, filho.Id);
+        await _context.PaisFilhos.AddAsync(paisFilhos);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<IEnumerable<Usuario>> ObterTodosAsync()
     {
         return await _context.Usuarios.ToListAsync();

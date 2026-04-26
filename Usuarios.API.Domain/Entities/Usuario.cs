@@ -10,12 +10,7 @@ public class Usuario
     public string SenhaHash { get; set; } = string.Empty;
     public bool Ativo { get; set; } = true;
     public PerfilUsuarioEnum Perfil { get; set; }
-    public int? PaiId { get; set; }
-    public Usuario? Pai { get; set; }
-    public ICollection<Usuario> Filhos { get; set; } = new List<Usuario>();
-
     protected Usuario() { }
-
     public Usuario(string nome, string email, string senhaHash, PerfilUsuarioEnum perfil)
     {
         Nome = nome;

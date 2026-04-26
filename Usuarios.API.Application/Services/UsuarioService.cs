@@ -73,11 +73,11 @@ public class UsuarioService : IUsuarioService
     public async Task<RespostaMetodos<RetornoUsuarioDto>> CriarUsuarioAsync(CriarUsuarioDto dto)
     {
         var senhaHash = BCrypt.Net.BCrypt.HashPassword(dto.Senha);
-        var usuario = new Usuario(dto.Nome, dto.Email, senhaHash, PerfilUsuarioEnum.Pai);
+        var pai = new Pai(dto.Nome, dto.Email, senhaHash);
 
-        await _usuarioRepository.AdicionarAsync(usuario);
+        await _usuarioRepository.AdicionarAsync(pai);
 
-        var usuarioRetorno = usuario.ToDto();
+        var usuarioRetorno = pai.ToDto();
 
         return new RespostaMetodos<RetornoUsuarioDto>
         {
@@ -153,7 +153,6 @@ public class UsuarioService : IUsuarioService
             };
         }
 
-
         if (pai.Perfil != PerfilUsuarioEnum.Pai)
         {
             return new RespostaMetodos<RetornoUsuarioDto>
@@ -165,13 +164,10 @@ public class UsuarioService : IUsuarioService
         }
 
         var senhaHash = BCrypt.Net.BCrypt.HashPassword(dto.Senha);
+        var filho = new Filho(dto.Nome, dto.Email, senhaHash, dto.DataNascimento);
+        var vinculo = new PaisFilhos(dto.PaiId, 0); // o id é passado na repository
 
-        var filho = new Usuario(dto.Nome, dto.Email, senhaHash, PerfilUsuarioEnum.Filho)
-        {
-            PaiId = dto.PaiId
-        };
-
-        await _usuarioRepository.AdicionarAsync(filho);
+        await _usuarioRepository.AdicionarFilhoAsync(filho, vinculo);
 
         return new RespostaMetodos<RetornoUsuarioDto>
         {
@@ -194,8 +190,6 @@ public class UsuarioService : IUsuarioService
                 Mensagem = "Email ou senha inválidos"
             };
         }
-
-
         var token = _tokenService.GerarToken(usuario);
 
         return new RespostaMetodos<RetornoLoginDto>
@@ -207,7 +201,7 @@ public class UsuarioService : IUsuarioService
                 Nome = usuario.Nome,
                 Email = usuario.Email,
                 Perfil = usuario.Perfil.ToString(),
-                Expiracao = DateTime.UtcNow.AddHours(8)
+                Expiracao = DateTime.UtcNow.AddHours(1)
             },
             Mensagem = "Login realizado com sucesso"
         };

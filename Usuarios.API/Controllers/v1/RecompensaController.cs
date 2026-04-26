@@ -16,6 +16,11 @@ public class RecompensaController : ControllerBase
         _recompensaService = recompensaService;
     }
 
+    /// <summary>
+    /// Obtém todas as recompensas associadas a um filho específico.
+    /// </summary>
+    /// <param name="filhoId">ID do filho</param>
+    /// <returns>Lista de recompensas do filho</returns>
     [HttpGet]
     [Route("ObterPorFilho/{filhoId}")]
     public async Task<IActionResult> ObterPorFilho(int filhoId)
@@ -30,6 +35,11 @@ public class RecompensaController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, recompensas);
     }
 
+    /// <summary>
+    /// Obtem os detalhes de uma recompensa específica por seu ID.
+    /// </summary>
+    /// <param name="id">ID da recompensa</param>
+    /// <returns>Detalhes da recompensa</returns>
     [HttpGet]
     [Route("ObterPorId/{id}")]
     public async Task<IActionResult> ObterPorId(int id)
@@ -42,9 +52,13 @@ public class RecompensaController : ControllerBase
         }
 
         return StatusCode((int)HttpStatusCode.OK, recompensa);
-
     }
 
+    /// <summary>
+    /// Criar uma nova recompensa para um filho específico. O DTO deve conter o ID do filho, a descrição da recompensa e os pontos necessários para resgatá-la.
+    /// </summary>
+    /// <param name="dto">Dados da recompensa</param>
+    /// <returns>Resultado da operação</returns>
     [HttpPost]
     [Route("Criar")]
     public async Task<IActionResult> Criar([FromBody] CriarRecompensaDto dto)
@@ -58,7 +72,12 @@ public class RecompensaController : ControllerBase
 
         return StatusCode((int)HttpStatusCode.Created, recompensa);
     }
-
+    /// <summary>
+    /// Atualizar os detalhes de uma recompensa existente, como a descrição ou os pontos necessários.
+    /// </summary>
+    /// <param name="id">ID da recompensa</param>
+    /// <param name="dto">Novos dados da recompensa</param>
+    /// <returns>Resultado da operação</returns>
     [HttpPut]
     [Route("Atualizar/{id}")]
     public async Task<IActionResult> Atualizar(int id, [FromBody] CriarRecompensaDto dto)
@@ -73,6 +92,11 @@ public class RecompensaController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, atualizado);
     }
 
+    /// <summary>
+    /// Deletar uma recompensa existente, removendo-a do sistema. Essa ação deve ser confirmada para evitar exclusões acidentais.
+    /// </summary>
+    /// <param name="id">ID da recompensa</param>
+    /// <returns>Resultado da operação</returns>
     [HttpDelete]
     [Route("Remover/{id}")]
     public async Task<IActionResult> Remover(int id)
@@ -87,6 +111,12 @@ public class RecompensaController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, removido);
     }
 
+    /// <summary>
+    /// Resgatar uma recompensa para um filho específico.
+    /// </summary>
+    /// <param name="filhoId">ID do filho</param>
+    /// <param name="recompensaId">ID da recompensa</param>
+    /// <returns>Resultado da operação</returns>
     [HttpPost]
     [Route("Resgatar/{filhoId}/{recompensaId}")]
     public async Task<IActionResult> Resgatar(int filhoId, int recompensaId)
@@ -100,7 +130,11 @@ public class RecompensaController : ControllerBase
 
         return StatusCode((int)HttpStatusCode.OK, resgatada);
     }
-
+    /// <summary>
+    /// Retornar uma lista de todas as recompensas que um filho específico resgatou, incluindo detalhes como a data do resgate e a descrição da recompensa.
+    /// </summary>
+    /// <param name="filhoId">ID do filho</param>
+    /// <returns>Lista de recompensas resgatadas</returns>
     [HttpGet]
     [Route("ObterResgatadas/{filhoId}")]
     public async Task<IActionResult> ObterResgatadas(int filhoId)

@@ -17,7 +17,10 @@ public class TarefaController : ControllerBase
     {
         _tarefaService = tarefaService;
     }
-
+    /// <summary>
+    /// Obter todas as tarefas.
+    /// </summary>
+    /// <returns>Retorna todas as tarefas cadastradas.</returns>
     [HttpGet("ObterTodas")]
     public async Task<IActionResult> ObterTodas()
     {
@@ -31,6 +34,11 @@ public class TarefaController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, tarefas.ObjetoRetorno);
     }
 
+    /// <summary>
+    /// Obter tarefas por ID do filho.
+    /// </summary>
+    /// <param name="filhoId">ID do filho</param>
+    /// <returns>Lista de tarefas do filho</returns>
     [HttpGet("filho/{filhoId:int}")]
     [Authorize(Roles = "Pai")]
     public async Task<IActionResult> ObterPorFilho(int filhoId)
@@ -45,6 +53,11 @@ public class TarefaController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, tarefas.ObjetoRetorno);
     }
 
+    /// <summary>
+    /// Obter tarefa por ID.
+    /// </summary>
+    /// <param name="tarefaId">ID da tarefa</param>
+    /// <returns>Retorna a tarefa correspondente ao ID fornecido</returns>
     [HttpGet("{tarefaId:int}")]
     [Authorize(Roles = "Pai")]
     public async Task<IActionResult> ObterPorId(int tarefaId)
@@ -59,6 +72,11 @@ public class TarefaController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, tarefa.ObjetoRetorno);
     }
 
+    /// <summary>
+    /// Criar uma nova tarefa.
+    /// </summary>
+    /// <param name="dto">Dados para criar a tarefa</param>
+    /// <returns>Resultado da operação</returns>
     [HttpPost("CriarTarefa")]
     [Authorize(Roles = "Pai")]
     public async Task<IActionResult> Criar([FromBody] CriarTarefaDto dto)
@@ -76,9 +94,14 @@ public class TarefaController : ControllerBase
         }
 
         return StatusCode((int)HttpStatusCode.Created, tarefa.ObjetoRetorno);
-
     }
 
+    /// <summary>
+    /// Atualizar a tarefa cadastrada.
+    /// </summary>
+    /// <param name="tarefaId"> ID da tarefa</param>
+    /// <param name="dto">Dados para atualizar a tarefa</param>
+    /// <returns>Resultado da operação</returns>
     [HttpPut("{tarefaId:int}")]
     [Authorize(Roles = "Pai")]
     public async Task<IActionResult> Atualizar(int tarefaId, [FromBody] CriarTarefaDto dto)
@@ -99,7 +122,11 @@ public class TarefaController : ControllerBase
 
         return StatusCode((int)HttpStatusCode.OK, resultado.Mensagem);
     }
-
+    /// <summary>
+    /// Remover a tarefa cadastrada.
+    /// </summary>
+    /// <param name="tarefaId">ID da tarefa</param>
+    /// <returns>Resultado da operação</returns>
     [HttpDelete("{tarefaId:int}")]
     [Authorize(Roles = "Pai")]
     public async Task<IActionResult> Remover(int tarefaId)

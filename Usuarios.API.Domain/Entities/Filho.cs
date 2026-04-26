@@ -5,6 +5,7 @@ namespace Usuarios.API.Domain.Entities;
 public class Filho : Usuario
 {
     public DateTime DataNascimento { get; private set; }
+    public ICollection<PaisFilhos> PaisFilhos { get; private set; } = new List<PaisFilhos>();
 
     protected Filho() { }
 

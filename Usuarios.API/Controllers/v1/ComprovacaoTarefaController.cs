@@ -17,6 +17,11 @@ public class ComprovacaoTarefaController : ControllerBase
         _comprovacaoTarefaService = comprovacaoTarefaService;
     }
 
+    /// <summary>
+    /// Obter comprovações de uma tarefa específica
+    /// </summary>
+    /// <param name="tarefaId">ID da tarefa</param>
+    /// <returns>Lista de comprovações da tarefa</returns>
     [HttpGet("tarefa/{tarefaId:int}")]
     public async Task<IActionResult> ObterPorTarefa(int tarefaId)
     {
@@ -29,6 +34,11 @@ public class ComprovacaoTarefaController : ControllerBase
 
         return StatusCode((int)resultado.StatusCode, resultado);
     }
+    /// <summary>
+    /// Obter comprovações de uma tarefa específica pelo seu ID
+    /// </summary>
+    /// <param name="id">ID da comprovação</param>
+    /// <returns>Comprovação da tarefa</returns>
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> ObterPorId(int id)
@@ -43,6 +53,11 @@ public class ComprovacaoTarefaController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, resultado.ObjetoRetorno);
     }
 
+    /// <summary>
+    /// Enviar comprovação de tarefa para validação
+    /// </summary>
+    /// <param name="dto">Dados da comprovação</param>
+    /// <returns>Resultado da operação</returns>
     [HttpPost("enviar")]
     [Authorize(Roles = "Filho")]
     public async Task<IActionResult> Enviar([FromBody] CriarComprovacaoDto dto)
@@ -61,8 +76,12 @@ public class ComprovacaoTarefaController : ControllerBase
 
         return StatusCode((int)(resultado.StatusCode == 0 ? HttpStatusCode.Created : resultado.StatusCode), resultado);
     }
-
-    [HttpPatch("validar/{id:int}")]
+    /// <summary>
+    /// Validar comprovação de tarefa (aprovando ou rejeitando)
+    /// </summary>
+    /// <param name="id">ID da comprovação</param>
+    /// <returns>Resultado da operação</returns>
+    [HttpPost("validar/{id:int}")]
     [Authorize(Roles = "Pai")]
     public async Task<IActionResult> Validar(int id)
     {

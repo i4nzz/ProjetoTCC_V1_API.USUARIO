@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Usuarios.API.Domain.Entities;
 
-namespace Usuarios.API.Infrastructure.Mappings;
+namespace Usuarios.API.Infra.Mappings;
 
 public class UsuarioMap : IEntityTypeConfiguration<Usuario>
 {
@@ -13,22 +13,22 @@ public class UsuarioMap : IEntityTypeConfiguration<Usuario>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Nome)
-               .IsRequired()
-               .HasMaxLength(100);
+            .IsRequired()
+            .HasMaxLength(100);
 
         builder.Property(x => x.Email)
-               .IsRequired()
-               .HasMaxLength(150);
+            .IsRequired()
+            .HasMaxLength(150);
 
         builder.Property(x => x.SenhaHash)
-               .IsRequired()
-               .HasMaxLength(255);
-
+            .IsRequired()
+            .HasMaxLength(255);
 
         builder.Property(x => x.Ativo)
-               .HasDefaultValue(true)
-               .IsRequired();
+            .HasDefaultValue(true)
+            .IsRequired();
+
+        builder.Property(x => x.Perfil)
+            .IsRequired();
     }
 }
-
-

@@ -16,6 +16,11 @@ public class PontuacaoController : ControllerBase
         _pontuacaoService = pontuacaoService;
     }
 
+    /// <summary>
+    /// Obter as pontuações de um filho específico.
+    /// </summary>
+    /// <param name="filhoId">ID do filho</param>
+    /// <returns>Lista de pontuações do filho</returns>
     [HttpGet]
     [Route("ObterPorFilho/{filhoId}")]
     public async Task<IActionResult> ObterPorFilho(int filhoId)
@@ -30,6 +35,11 @@ public class PontuacaoController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, pontuacoes.ObjetoRetorno);
     }
 
+    /// <summary>
+    /// Obter o total de pontos acumulados por um filho específico.
+    /// </summary>
+    /// <param name="filhoId">ID do filho</param>
+    /// <returns>Total de pontos do filho</returns>
     [HttpGet]
     [Route("ObterTotal/{filhoId}")]
     public async Task<IActionResult> ObterTotal(int filhoId)
@@ -44,6 +54,11 @@ public class PontuacaoController : ControllerBase
         return StatusCode((int)HttpStatusCode.OK, total.ObjetoRetorno);
     }
 
+    /// <summary>
+    /// Adicionar uma nova pontuação para um filho.
+    /// </summary>
+    /// <param name="dto">Dados da pontuação</param>
+    /// <returns>Resultado da operação</returns>
     [HttpPost]
     [Route("Adicionar")]
     public async Task<IActionResult> Adicionar([FromBody] CriarPontuacaoDto dto)
