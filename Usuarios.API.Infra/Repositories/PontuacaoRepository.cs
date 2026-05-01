@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Usuarios.API.Domain.Entities;
-using Usuarios.API.Domain.Interfaces;
-using Usuarios.API.Infra.Data;
+using GestaoTarefas.Domain.Entities;
+using GestaoTarefas.Domain.Interfaces;
+using GestaoTarefas.Infra.Data;
 
-namespace Usuarios.API.Infra.Repositories;
+namespace GestaoTarefas.Infra.Repositories;
 
 public class PontuacaoRepository : IPontuacaoRepository
 {

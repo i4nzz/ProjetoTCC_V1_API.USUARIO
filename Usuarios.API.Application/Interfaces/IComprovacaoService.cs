@@ -1,7 +1,7 @@
-﻿using Usuarios.API.Application.Common.Responses;
-using Usuarios.API.Application.DTOs.Recompensa;
+﻿using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.DTOs.Recompensa;
 
-namespace Usuarios.API.Application.Interfaces;
+namespace GestaoTarefas.Application.Interfaces;
 
 public interface IComprovacaoService
 {

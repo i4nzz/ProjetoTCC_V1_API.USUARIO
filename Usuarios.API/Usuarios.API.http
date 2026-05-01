@@ -1,6 +1,6 @@
-@Usuarios.API_HostAddress = http://localhost:5294
+@GestaoTarefas_HostAddress = http://localhost:5294
 
-GET {{Usuarios.API_HostAddress}}/weatherforecast/
+GET {{GestaoTarefas_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

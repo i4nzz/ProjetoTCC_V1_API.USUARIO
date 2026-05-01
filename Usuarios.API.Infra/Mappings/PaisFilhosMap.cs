@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Usuarios.API.Domain.Entities;
+using GestaoTarefas.Domain.Entities;
 
-namespace Usuarios.API.Infra.Mappings;
+namespace GestaoTarefas.Infra.Mappings;
 
 public class PaisFilhosMap : IEntityTypeConfiguration<PaisFilhos>
 {

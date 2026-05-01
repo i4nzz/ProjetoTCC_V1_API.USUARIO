@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Usuarios.API.Infra.Migrations
+namespace GestaoTarefas.Infra.Migrations
 {
     /// <inheritdoc />
     public partial class TPTHierarquia : Migration

@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Usuarios.API.Application.DTOs.Tarefa;
-using Usuarios.API.Application.Interfaces;
+using GestaoTarefas.Application.DTOs.Tarefa;
+using GestaoTarefas.Application.Interfaces;
 
-namespace Usuarios.API.Controllers.v1;
+namespace GestaoTarefas.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/[controller]")]

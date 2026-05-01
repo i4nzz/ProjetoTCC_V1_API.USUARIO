@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Usuarios.API.Infra.Data;
+using GestaoTarefas.Infra.Data;
 
 #nullable disable
 
-namespace Usuarios.API.Infra.Migrations
+namespace GestaoTarefas.Infra.Migrations
 {
     [DbContext(typeof(AppDbContexto))]
     [Migration("20260411164421_InitialCreate")]
@@ -25,7 +25,7 @@ namespace Usuarios.API.Infra.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.CategoriaFinanceira", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.CategoriaFinanceira", b =>
                 {
                     b.Property<int>("CategoriaFinanceiraId")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("categoria_financeira", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.ComprovacaoTarefa", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.ComprovacaoTarefa", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,7 +80,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("comprovacao_tarefa", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Mesada", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Mesada", b =>
                 {
                     b.Property<int>("MesadaId")
                         .ValueGeneratedOnAdd()
@@ -110,7 +110,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("mesada", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.PaisFilhos", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.PaisFilhos", b =>
                 {
                     b.Property<int>("PaiId")
                         .HasColumnType("int");
@@ -128,7 +128,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("pais_filhos", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Pontuacao", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Pontuacao", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,7 +158,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("pontuacao", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Recompensa", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Recompensa", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,7 +193,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("recompensa", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.RecompensaResgatada", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.RecompensaResgatada", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -219,7 +219,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("recompensa_resgatada", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.RegistroFinanceiro", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.RegistroFinanceiro", b =>
                 {
                     b.Property<int>("RegistroId")
                         .ValueGeneratedOnAdd()
@@ -263,7 +263,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("registro_financeiro", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Tarefa", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Tarefa", b =>
                 {
                     b.Property<int>("TarefaId")
                         .ValueGeneratedOnAdd()
@@ -302,7 +302,7 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("tarefa", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Usuario", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Usuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -345,9 +345,9 @@ namespace Usuarios.API.Infra.Migrations
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Filho", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Filho", b =>
                 {
-                    b.HasBaseType("Usuarios.API.Domain.Entities.Usuario");
+                    b.HasBaseType("GestaoTarefas.Domain.Entities.Usuario");
 
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("datetime2");
@@ -355,31 +355,31 @@ namespace Usuarios.API.Infra.Migrations
                     b.ToTable("filho", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Pai", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Pai", b =>
                 {
-                    b.HasBaseType("Usuarios.API.Domain.Entities.Usuario");
+                    b.HasBaseType("GestaoTarefas.Domain.Entities.Usuario");
 
                     b.ToTable("pai", (string)null);
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.ComprovacaoTarefa", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.ComprovacaoTarefa", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Tarefa", "Tarefa")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Tarefa", "Tarefa")
                         .WithMany()
                         .HasForeignKey("TarefaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Usuarios.API.Domain.Entities.Tarefa", null)
+                    b.HasOne("GestaoTarefas.Domain.Entities.Tarefa", null)
                         .WithMany("Comprovacoes")
                         .HasForeignKey("TarefaId1");
 
                     b.Navigation("Tarefa");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Mesada", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Mesada", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -388,15 +388,15 @@ namespace Usuarios.API.Infra.Migrations
                     b.Navigation("Filho");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.PaisFilhos", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.PaisFilhos", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Filho", "Filho")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Filho", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Usuarios.API.Domain.Entities.Pai", "Pai")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Pai", "Pai")
                         .WithMany("PaisFilhos")
                         .HasForeignKey("PaiId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -407,17 +407,17 @@ namespace Usuarios.API.Infra.Migrations
                     b.Navigation("Pai");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Pontuacao", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Pontuacao", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Usuarios.API.Domain.Entities.Tarefa", "Tarefa")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Tarefa", "Tarefa")
                         .WithOne()
-                        .HasForeignKey("Usuarios.API.Domain.Entities.Pontuacao", "TarefaId")
+                        .HasForeignKey("GestaoTarefas.Domain.Entities.Pontuacao", "TarefaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -426,9 +426,9 @@ namespace Usuarios.API.Infra.Migrations
                     b.Navigation("Tarefa");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Recompensa", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Recompensa", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -437,15 +437,15 @@ namespace Usuarios.API.Infra.Migrations
                     b.Navigation("Filho");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.RecompensaResgatada", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.RecompensaResgatada", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Filho", "Filho")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Filho", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Usuarios.API.Domain.Entities.Recompensa", "Recompensa")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Recompensa", "Recompensa")
                         .WithMany()
                         .HasForeignKey("RecompensaId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -456,25 +456,25 @@ namespace Usuarios.API.Infra.Migrations
                     b.Navigation("Recompensa");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.RegistroFinanceiro", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.RegistroFinanceiro", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.CategoriaFinanceira", null)
+                    b.HasOne("GestaoTarefas.Domain.Entities.CategoriaFinanceira", null)
                         .WithMany("Registros")
                         .HasForeignKey("CategoriaFinanceiraId");
 
-                    b.HasOne("Usuarios.API.Domain.Entities.CategoriaFinanceira", "Categoria")
+                    b.HasOne("GestaoTarefas.Domain.Entities.CategoriaFinanceira", "Categoria")
                         .WithMany()
                         .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Usuarios.API.Domain.Entities.Mesada", "Mesada")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Mesada", "Mesada")
                         .WithMany()
                         .HasForeignKey("MesadaId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -487,9 +487,9 @@ namespace Usuarios.API.Infra.Migrations
                     b.Navigation("Mesada");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Tarefa", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Tarefa", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Filho")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Usuario", "Filho")
                         .WithMany()
                         .HasForeignKey("FilhoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -498,49 +498,49 @@ namespace Usuarios.API.Infra.Migrations
                     b.Navigation("Filho");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Usuario", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Usuario", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", "Pai")
+                    b.HasOne("GestaoTarefas.Domain.Entities.Usuario", "Pai")
                         .WithMany("Filhos")
                         .HasForeignKey("PaiId");
 
                     b.Navigation("Pai");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Filho", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Filho", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", null)
+                    b.HasOne("GestaoTarefas.Domain.Entities.Usuario", null)
                         .WithOne()
-                        .HasForeignKey("Usuarios.API.Domain.Entities.Filho", "Id")
+                        .HasForeignKey("GestaoTarefas.Domain.Entities.Filho", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Pai", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Pai", b =>
                 {
-                    b.HasOne("Usuarios.API.Domain.Entities.Usuario", null)
+                    b.HasOne("GestaoTarefas.Domain.Entities.Usuario", null)
                         .WithOne()
-                        .HasForeignKey("Usuarios.API.Domain.Entities.Pai", "Id")
+                        .HasForeignKey("GestaoTarefas.Domain.Entities.Pai", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.CategoriaFinanceira", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.CategoriaFinanceira", b =>
                 {
                     b.Navigation("Registros");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Tarefa", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Tarefa", b =>
                 {
                     b.Navigation("Comprovacoes");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Usuario", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Usuario", b =>
                 {
                     b.Navigation("Filhos");
                 });
 
-            modelBuilder.Entity("Usuarios.API.Domain.Entities.Pai", b =>
+            modelBuilder.Entity("GestaoTarefas.Domain.Entities.Pai", b =>
                 {
                     b.Navigation("PaisFilhos");
                 });

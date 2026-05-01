@@ -1,13 +1,13 @@
-﻿using Usuarios.API.Application.Common.Responses;
-using Usuarios.API.Application.DTOs.Login;
-using Usuarios.API.Application.DTOs.Usuario;
-using Usuarios.API.Application.Interfaces;
-using Usuarios.API.Application.Mapping;
-using Usuarios.API.Domain.Entities;
-using Usuarios.API.Domain.Enum;
-using Usuarios.API.Domain.Interfaces;
+﻿using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.DTOs.Login;
+using GestaoTarefas.Application.DTOs.Usuario;
+using GestaoTarefas.Application.Interfaces;
+using GestaoTarefas.Application.Mapping;
+using GestaoTarefas.Domain.Entities;
+using GestaoTarefas.Domain.Enum;
+using GestaoTarefas.Domain.Interfaces;
 
-namespace Usuarios.API.Application.Services;
+namespace GestaoTarefas.Application.Services;
 
 public class UsuarioService : IUsuarioService
 {

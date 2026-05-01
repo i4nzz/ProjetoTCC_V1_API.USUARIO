@@ -1,5 +1,5 @@
-using Usuarios.API.Ioc;
-using Usuarios.API.IoC;
+using GestaoTarefas.Ioc;
+using GestaoTarefas.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,4 @@
-﻿namespace Usuarios.API.Domain.Entities;
+﻿namespace GestaoTarefas.Domain.Entities;
 
 public class Tarefa
 {

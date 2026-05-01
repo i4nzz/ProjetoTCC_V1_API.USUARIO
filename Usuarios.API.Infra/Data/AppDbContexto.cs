@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Usuarios.API.Domain.Entities;
+using GestaoTarefas.Domain.Entities;
 
-namespace Usuarios.API.Infra.Data;
+namespace GestaoTarefas.Infra.Data;
 
 public class AppDbContexto : DbContext
 {

@@ -3,10 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Usuarios.API.Application.Interfaces;
-using Usuarios.API.Domain.Entities;
+using GestaoTarefas.Application.Interfaces;
+using GestaoTarefas.Domain.Entities;
 
-namespace Usuarios.API.Application.Services;
+namespace GestaoTarefas.Application.Services;
 
 public class TokenService : ITokenService
 {

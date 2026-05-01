@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Usuarios.API.Application.DTOs.Usuario;
+namespace GestaoTarefas.Application.DTOs.Usuario;
 
 public class CriarFilhoDto
 {

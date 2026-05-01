@@ -1,12 +1,12 @@
 ﻿using System.Net;
-using Usuarios.API.Application.Common.Responses;
-using Usuarios.API.Application.DTOs.Recompensa;
-using Usuarios.API.Application.Interfaces;
-using Usuarios.API.Application.Mapping;
-using Usuarios.API.Domain.Entities;
-using Usuarios.API.Domain.Interfaces;
+using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.DTOs.Recompensa;
+using GestaoTarefas.Application.Interfaces;
+using GestaoTarefas.Application.Mapping;
+using GestaoTarefas.Domain.Entities;
+using GestaoTarefas.Domain.Interfaces;
 
-namespace Usuarios.API.Application.Services;
+namespace GestaoTarefas.Application.Services;
 
 public class RecompensaService : IRecompensaService
 {

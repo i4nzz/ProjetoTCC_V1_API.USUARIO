@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Usuarios.API.Application.Common.Responses;
+namespace GestaoTarefas.Application.Common.Responses;
 
 public class RespostaMetodos<T>
 {

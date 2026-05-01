@@ -1,6 +1,6 @@
-﻿using Usuarios.API.Domain.Entities;
+﻿using GestaoTarefas.Domain.Entities;
 
-namespace Usuarios.API.Domain.Interfaces;
+namespace GestaoTarefas.Domain.Interfaces;
 
 public interface IPontuacaoRepository
 {

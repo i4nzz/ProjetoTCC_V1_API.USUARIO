@@ -1,7 +1,7 @@
-﻿using Usuarios.API.Application.DTOs.Recompensa;
-using Usuarios.API.Domain.Entities;
+﻿using GestaoTarefas.Application.DTOs.Recompensa;
+using GestaoTarefas.Domain.Entities;
 
-namespace Usuarios.API.Application.Mapping;
+namespace GestaoTarefas.Application.Mapping;
 
 public static class ComprovacaoMapping
 {
