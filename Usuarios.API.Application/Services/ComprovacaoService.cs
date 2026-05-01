@@ -1,4 +1,5 @@
-﻿using Usuarios.API.Application.Common.Responses;
+﻿using System.Net;
+using Usuarios.API.Application.Common.Responses;
 using Usuarios.API.Application.DTOs.Recompensa;
 using Usuarios.API.Application.Interfaces;
 using Usuarios.API.Application.Mapping;
@@ -33,6 +34,7 @@ public class ComprovacaoService : IComprovacaoService
         return new RespostaMetodos<IEnumerable<RetornoComprovacaoDto>>
         {
             Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
             ObjetoRetorno = comprovacoes.Select(x => new RetornoComprovacaoDto()
             {
                 TarefaId = x.TarefaId,
@@ -63,6 +65,7 @@ public class ComprovacaoService : IComprovacaoService
         return new RespostaMetodos<RetornoComprovacaoDto?>
         {
             Sucesso = true,
+            StatusCode = HttpStatusCode.OK,
             ObjetoRetorno = retorno
         };
     }

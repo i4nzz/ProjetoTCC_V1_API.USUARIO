@@ -32,7 +32,7 @@ public class ComprovacaoTarefaController : ControllerBase
             return StatusCode((int)HttpStatusCode.BadRequest, resultado.Mensagem);
         }
 
-        return StatusCode((int)resultado.StatusCode, resultado);
+        return StatusCode((int)HttpStatusCode.OK, resultado);
     }
     /// <summary>
     /// Obter comprovações de uma tarefa específica pelo seu ID
