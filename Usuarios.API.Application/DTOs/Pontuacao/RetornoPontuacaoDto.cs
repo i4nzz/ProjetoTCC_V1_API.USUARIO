@@ -1,4 +1,4 @@
-﻿namespace Usuarios.API.Application.DTOs.Pontuacao
+﻿namespace GestaoTarefas.Application.DTOs.Pontuacao
 {
     public class RetornoPontuacaoDto
     {

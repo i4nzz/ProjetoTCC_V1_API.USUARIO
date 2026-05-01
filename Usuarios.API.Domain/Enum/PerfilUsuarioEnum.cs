@@ -1,4 +1,4 @@
-﻿namespace Usuarios.API.Domain.Enum
+﻿namespace GestaoTarefas.Domain.Enum
 {
     public enum PerfilUsuarioEnum
     {

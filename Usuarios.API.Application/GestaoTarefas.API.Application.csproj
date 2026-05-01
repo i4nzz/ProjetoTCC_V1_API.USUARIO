@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Usuarios.API.Domain\Usuarios.API.Domain.csproj" />
+		<ProjectReference Include="..\Usuarios.API.Domain\GestaoTarefas.API.Domain.csproj" />
 	</ItemGroup>
 
 </Project>

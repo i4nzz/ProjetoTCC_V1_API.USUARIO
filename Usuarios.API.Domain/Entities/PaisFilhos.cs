@@ -1,4 +1,4 @@
-﻿namespace Usuarios.API.Domain.Entities;
+﻿namespace GestaoTarefas.Domain.Entities;
 
 // entidade de relacionamento muitos-para-muitos entre Pai e Filho
 public class PaisFilhos

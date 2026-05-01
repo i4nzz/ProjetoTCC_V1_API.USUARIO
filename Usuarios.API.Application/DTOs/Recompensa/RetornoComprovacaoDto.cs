@@ -1,4 +1,4 @@
-﻿namespace Usuarios.API.Application.DTOs.Recompensa;
+﻿namespace GestaoTarefas.Application.DTOs.Recompensa;
 
 public class RetornoComprovacaoDto
 {

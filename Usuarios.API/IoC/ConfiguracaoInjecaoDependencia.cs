@@ -1,10 +1,10 @@
-using Usuarios.API.Application.Interfaces;
-using Usuarios.API.Application.Services;
-using Usuarios.API.Domain.Interfaces;
-using Usuarios.API.Infra.Repositories;
-using Usuarios.API.Infrastructure.Repositories;
+using GestaoTarefas.Application.Interfaces;
+using GestaoTarefas.Application.Services;
+using GestaoTarefas.Domain.Interfaces;
+using GestaoTarefas.Infra.Repositories;
+using GestaoTarefas.Infrastructure.Repositories;
 
-namespace Usuarios.API.Ioc;
+namespace GestaoTarefas.Ioc;
 
 public static class ConfiguracaoInjecaoDeDependencia
 {

@@ -1,7 +1,7 @@
-﻿using Usuarios.API.Application.Common.Responses;
-using Usuarios.API.Application.DTOs.Login;
-using Usuarios.API.Application.DTOs.Usuario;
-namespace Usuarios.API.Application.Interfaces
+﻿using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.DTOs.Login;
+using GestaoTarefas.Application.DTOs.Usuario;
+namespace GestaoTarefas.Application.Interfaces
 {
     public interface IUsuarioService
     {

@@ -1,6 +1,6 @@
-﻿using Usuarios.API.Domain.Entities;
+﻿using GestaoTarefas.Domain.Entities;
 
-namespace Usuarios.API.Application.Interfaces;
+namespace GestaoTarefas.Application.Interfaces;
 
 public interface ITokenService
 {

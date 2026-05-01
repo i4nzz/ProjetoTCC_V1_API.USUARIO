@@ -1,4 +1,4 @@
-﻿namespace Usuarios.API.Domain.Entities;
+﻿namespace GestaoTarefas.Domain.Entities;
 
 public class CategoriaFinanceira
 {
@@ -6,5 +6,5 @@ public class CategoriaFinanceira
     public string Nome { get; set; } = string.Empty;
     public ICollection<RegistroFinanceiro> Registros { get; set; } = new List<RegistroFinanceiro>();
 }
-// dotnet ef migrations add newCreate --project Usuarios.API.Infra --startup-project Usuarios.API
-// dotnet ef database update --project Usuarios.API.Infra --startup-project Usuarios.API
+// dotnet ef migrations add newCreate --project GestaoTarefas.Infra --startup-project GestaoTarefas
+// dotnet ef database update --project GestaoTarefas.Infra --startup-project GestaoTarefas

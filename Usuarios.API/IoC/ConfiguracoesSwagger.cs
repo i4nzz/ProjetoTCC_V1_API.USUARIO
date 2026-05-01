@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.OpenApi.Models;
 
-namespace Usuarios.API.IoC;
+namespace GestaoTarefas.IoC;
 /// <summary>
 /// Provides extension methods for configuring Swagger in the API application.
 /// </summary>

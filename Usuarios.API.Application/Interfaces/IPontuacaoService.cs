@@ -1,7 +1,7 @@
-﻿using Usuarios.API.Application.Common.Responses;
-using Usuarios.API.Application.DTOs.Pontuacao;
+﻿using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.DTOs.Pontuacao;
 
-namespace Usuarios.API.Application.Interfaces;
+namespace GestaoTarefas.Application.Interfaces;
 
 public interface IPontuacaoService
 {

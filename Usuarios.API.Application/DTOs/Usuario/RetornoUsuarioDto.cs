@@ -1,6 +1,6 @@
-﻿using Usuarios.API.Domain.Enum;
+﻿using GestaoTarefas.Domain.Enum;
 
-namespace Usuarios.API.Application.DTOs.Usuario;
+namespace GestaoTarefas.Application.DTOs.Usuario;
 
 public class RetornoUsuarioDto
 {

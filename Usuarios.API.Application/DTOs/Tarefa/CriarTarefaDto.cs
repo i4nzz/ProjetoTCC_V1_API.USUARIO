@@ -1,4 +1,4 @@
-﻿namespace Usuarios.API.Application.DTOs.Tarefa
+﻿namespace GestaoTarefas.Application.DTOs.Tarefa
 {
     public class CriarTarefaDto
     {

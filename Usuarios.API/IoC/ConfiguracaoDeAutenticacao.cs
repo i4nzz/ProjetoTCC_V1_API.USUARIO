@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Usuarios.API.IoC;
+namespace GestaoTarefas.IoC;
 
 public static class ConfiguracaoDeAutenticacao
 {

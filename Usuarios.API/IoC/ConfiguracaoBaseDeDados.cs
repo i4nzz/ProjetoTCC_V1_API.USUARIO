@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Usuarios.API.Infra.Data;
+using GestaoTarefas.Infra.Data;
 
-namespace Usuarios.API.IoC;
+namespace GestaoTarefas.IoC;
 
 public static class ConfiguracaoBaseDeDados
 {

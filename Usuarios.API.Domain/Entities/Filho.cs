@@ -1,6 +1,6 @@
-﻿using Usuarios.API.Domain.Enum;
+﻿using GestaoTarefas.Domain.Enum;
 
-namespace Usuarios.API.Domain.Entities;
+namespace GestaoTarefas.Domain.Entities;
 
 public class Filho : Usuario
 {
