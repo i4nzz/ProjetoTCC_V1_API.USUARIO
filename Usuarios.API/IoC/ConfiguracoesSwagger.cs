@@ -22,7 +22,7 @@ public static class ConfiguracoesSwagger
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "API.ProjetoTCC.V1.GestaoTarefas",
+                Title = "API.GestaoTarefas",
                 Version = "v1",
                 Description = "Sistema de tarefas domésticas com gamificação."
             });
@@ -39,7 +39,7 @@ public static class ConfiguracoesSwagger
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Insira o token JWT assim: Bearer {seu token}"
+                Description = "Insira o token JWT assim: Bearer eyJh..."
             });
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
@@ -59,15 +59,19 @@ public static class ConfiguracoesSwagger
 
         return services;
     }
-
+    /// <summary>
+    /// Usar as configurações de Swagger e configurar a interface do usuário do Swagger para a API, definindo o título do documento e o endpoint do Swagger JSON.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
     public static IApplicationBuilder UseSwaggerConfiguration(this IApplicationBuilder app)
     {
         app.UseSwagger();
 
         app.UseSwaggerUI(c =>
         {
-            c.DocumentTitle = "API.ProjetoTCC.V1.GestaoTarefas";
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "API.ProjetoTCC.V1.GestaoTarefas");
+            c.DocumentTitle = "API.GestaoTarefas";
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "API.GestaoTarefas v1");
         });
 
         return app;

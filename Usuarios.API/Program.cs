@@ -1,3 +1,4 @@
+using GestaoTarefas.API.Middlewares;
 using GestaoTarefas.Ioc;
 using GestaoTarefas.IoC;
 
@@ -17,6 +18,7 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseStaticFiles();
 app.UseSwaggerConfiguration();
 

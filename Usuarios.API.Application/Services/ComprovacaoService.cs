@@ -125,13 +125,6 @@ public class ComprovacaoService : IComprovacaoService
             };
         }
 
-        var pontuacaoTarefa = new CriarPontuacaoDto()
-        {
-            FilhoId = retornoTarefa.FilhoId,
-            TarefaId = retornoTarefa.TarefaId,
-            Pontos = retornoTarefa.Pontos,
-        };
-
         if (aprovar)
         {
             if (comprovacao.Status == StatusValidacaoTarefaEnum.Aprovada)
@@ -143,6 +136,13 @@ public class ComprovacaoService : IComprovacaoService
                     Mensagem = "Comprovação já estava aprovada"
                 };
             }
+
+            var pontuacaoTarefa = new CriarPontuacaoDto()
+            {
+                FilhoId = retornoTarefa.FilhoId,
+                TarefaId = retornoTarefa.TarefaId,
+                Pontos = retornoTarefa.Pontos,
+            };
 
             comprovacao.Aprovar();
 
