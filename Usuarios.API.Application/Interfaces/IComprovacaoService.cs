@@ -8,5 +8,5 @@ public interface IComprovacaoService
     Task<RespostaMetodos<IEnumerable<RetornoComprovacaoDto>>> ObterPorTarefaAsync(int tarefaId);
     Task<RespostaMetodos<RetornoComprovacaoDto?>> ObterPorIdAsync(int id);
     Task<RespostaMetodos<RetornoComprovacaoDto>> EnviarAsync(CriarComprovacaoDto dto);
-    Task<RespostaMetodos<RetornoComprovacaoDto>> ValidarAsync(int id);
+    Task<RespostaMetodos<RetornoComprovacaoDto>> ValidarAsync(int id, bool aprovar);
 }

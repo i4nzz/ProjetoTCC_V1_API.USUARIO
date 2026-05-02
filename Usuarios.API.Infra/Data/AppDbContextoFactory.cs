@@ -8,7 +8,8 @@ public class AppDbContextoFactory : IDesignTimeDbContextFactory<AppDbContexto>
 {
     public AppDbContexto CreateDbContext(string[] args)
     {
-        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../GestaoTarefas");
+        var basePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Usuarios.API"));
+        Console.WriteLine($"BasePath usado: {basePath}");
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(basePath)

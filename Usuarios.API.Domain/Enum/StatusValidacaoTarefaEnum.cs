@@ -1,9 +1,8 @@
-﻿namespace GestaoTarefas.Domain.Enum
+﻿namespace GestaoTarefas.Domain.Enum;
+
+public enum StatusValidacaoTarefaEnum
 {
-    public enum StatusValidacaoTarefaEnum
-    {
-        Pendente = 1,
-        Aprovada = 2,
-        Reprovada = 3
-    }
+    Pendente = 1,
+    Aprovada = 2,
+    Reprovada = 3
 }

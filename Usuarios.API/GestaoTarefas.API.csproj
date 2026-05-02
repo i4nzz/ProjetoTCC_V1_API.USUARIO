@@ -21,6 +21,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Usuarios.API.Application\GestaoTarefas.API.Application.csproj" />
+		<ProjectReference Include="..\Usuarios.API.Domain\GestaoTarefas.API.Domain.csproj" />
 		<ProjectReference Include="..\Usuarios.API.Infra\GestaoTarefas.API.Infra.csproj" />
 	</ItemGroup>
 

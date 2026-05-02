@@ -1,4 +1,6 @@
-﻿namespace GestaoTarefas.Domain.Entities;
+﻿using GestaoTarefas.Domain.Enum;
+
+namespace GestaoTarefas.Domain.Entities;
 
 public class ComprovacaoTarefa
 {
@@ -9,7 +11,8 @@ public class ComprovacaoTarefa
 
     public string UrlFoto { get; private set; }
     public DateTime DataEnvio { get; private set; }
-    public bool Validada { get; private set; }
+
+    public StatusValidacaoTarefaEnum Status { get; private set; }
     public DateTime? DataValidacao { get; private set; }
 
     protected ComprovacaoTarefa() { }
@@ -19,12 +22,24 @@ public class ComprovacaoTarefa
         TarefaId = tarefaId;
         UrlFoto = urlFoto;
         DataEnvio = DateTime.UtcNow;
-        Validada = false;
+        Status = StatusValidacaoTarefaEnum.Pendente;
     }
 
-    public void Validar()
+    public void Aprovar()
     {
-        Validada = true;
+        if (Status == StatusValidacaoTarefaEnum.Aprovada)
+            throw new InvalidOperationException("Comprovação já foi validada");
+
+        Status = StatusValidacaoTarefaEnum.Aprovada;
+        DataValidacao = DateTime.UtcNow;
+    }
+
+    public void Reprovar()
+    {
+        if (Status == StatusValidacaoTarefaEnum.Aprovada)
+            throw new InvalidOperationException("Comprovação já foi aprovada e não pode ser reprovada");
+
+        Status = StatusValidacaoTarefaEnum.Reprovada;
         DataValidacao = DateTime.UtcNow;
     }
 }

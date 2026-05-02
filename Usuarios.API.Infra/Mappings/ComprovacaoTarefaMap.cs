@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GestaoTarefas.Domain.Entities;
+using GestaoTarefas.Domain.Enum;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using GestaoTarefas.Domain.Entities;
 
 namespace GestaoTarefas.Infra.Mappings
 {
@@ -19,8 +20,9 @@ namespace GestaoTarefas.Infra.Mappings
             builder.Property(x => x.DataEnvio)
                    .IsRequired();
 
-            builder.Property(x => x.Validada)
-                   .IsRequired();
+            builder.Property(x => x.Status)
+                   .HasConversion<int>()
+                   .HasDefaultValue(StatusValidacaoTarefaEnum.Pendente);
 
             builder.HasOne(x => x.Tarefa)
                    .WithMany(t => t.Comprovacoes)

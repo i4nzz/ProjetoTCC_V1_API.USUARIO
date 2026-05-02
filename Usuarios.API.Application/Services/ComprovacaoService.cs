@@ -1,9 +1,11 @@
 ﻿using System.Net;
 using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.DTOs.Pontuacao;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Application.Mapping;
 using GestaoTarefas.Domain.Entities;
+using GestaoTarefas.Domain.Enum;
 using GestaoTarefas.Domain.Interfaces;
 
 namespace GestaoTarefas.Application.Services;
@@ -11,10 +13,20 @@ namespace GestaoTarefas.Application.Services;
 public class ComprovacaoService : IComprovacaoService
 {
     private readonly IComprovacaoRepository _comprovacaoRepository;
-
-    public ComprovacaoService(IComprovacaoRepository comprovacaoRepository)
+    private readonly ITarefaRepository _tarefaRepository;
+    private readonly IPontuacaoService _pontuacaoService;
+    private readonly IPontuacaoRepository _pontuacaoRepository;
+    public ComprovacaoService(
+        IComprovacaoRepository comprovacaoRepository
+        , IPontuacaoRepository pontuacaoRepository
+        , ITarefaRepository tarefaRepository
+        , IPontuacaoService pontuacaoService
+        )
     {
         _comprovacaoRepository = comprovacaoRepository;
+        _pontuacaoService = pontuacaoService;
+        _tarefaRepository = tarefaRepository;
+        _pontuacaoRepository = pontuacaoRepository;
     }
 
     public async Task<RespostaMetodos<IEnumerable<RetornoComprovacaoDto>>> ObterPorTarefaAsync(int tarefaId)
@@ -87,7 +99,7 @@ public class ComprovacaoService : IComprovacaoService
         };
     }
 
-    public async Task<RespostaMetodos<RetornoComprovacaoDto>> ValidarAsync(int id)
+    public async Task<RespostaMetodos<RetornoComprovacaoDto>> ValidarAsync(int id, bool aprovar)
     {
         var comprovacao = await _comprovacaoRepository.ObterPorIdAsync(id);
 
@@ -101,26 +113,76 @@ public class ComprovacaoService : IComprovacaoService
             };
         }
 
-        if (comprovacao.Validada)
+        var retornoTarefa = await _tarefaRepository.ObterPorIdAsync(comprovacao.TarefaId);
+
+        if (retornoTarefa == null)
         {
             return new RespostaMetodos<RetornoComprovacaoDto>
             {
                 Sucesso = false,
                 ObjetoRetorno = null,
-                Mensagem = "Comprovação já foi validada"
+                Mensagem = "Tarefa para essa validação não foi encontrada"
             };
         }
 
-        comprovacao.Validar();
-        await _comprovacaoRepository.AtualizarAsync(comprovacao);
+        var pontuacaoTarefa = new CriarPontuacaoDto()
+        {
+            FilhoId = retornoTarefa.FilhoId,
+            TarefaId = retornoTarefa.TarefaId,
+            Pontos = retornoTarefa.Pontos,
+        };
 
-        var retornoComprovacao = comprovacao.ToDto();
+        if (aprovar)
+        {
+            if (comprovacao.Status == StatusValidacaoTarefaEnum.Aprovada)
+            {
+                return new RespostaMetodos<RetornoComprovacaoDto>
+                {
+                    Sucesso = true,
+                    ObjetoRetorno = comprovacao.ToDto(),
+                    Mensagem = "Comprovação já estava aprovada"
+                };
+            }
+
+            comprovacao.Aprovar();
+
+            var existePontos = await _pontuacaoRepository.ExisteAsync(retornoTarefa.TarefaId, retornoTarefa.FilhoId);
+
+            if (!existePontos)
+            {
+                await _pontuacaoService.AdicionarAsync(pontuacaoTarefa);
+            }
+        }
+        else
+        {
+            if (comprovacao.Status == StatusValidacaoTarefaEnum.Reprovada)
+            {
+                return new RespostaMetodos<RetornoComprovacaoDto>
+                {
+                    Sucesso = true,
+                    ObjetoRetorno = comprovacao.ToDto(),
+                    Mensagem = "Comprovação já estava reprovada"
+                };
+            }
+
+            if (comprovacao.Status == StatusValidacaoTarefaEnum.Aprovada)
+            {
+                return new RespostaMetodos<RetornoComprovacaoDto>
+                {
+                    Sucesso = false,
+                    Mensagem = "Comprovação já foi aprovada e não pode ser reprovada"
+                };
+            }
+
+            comprovacao.Reprovar();
+        }
+        await _comprovacaoRepository.AtualizarAsync(comprovacao);
 
         return new RespostaMetodos<RetornoComprovacaoDto>
         {
             Sucesso = true,
-            ObjetoRetorno = retornoComprovacao,
-            Mensagem = "Comprovação validada com sucesso"
+            ObjetoRetorno = comprovacao.ToDto(),
+            Mensagem = aprovar ? "Comprovação aprovada com sucesso" : "Comprovação reprovada com sucesso"
         };
     }
 }

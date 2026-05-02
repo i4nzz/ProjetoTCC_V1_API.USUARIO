@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using GestaoTarefas.Domain.Entities;
+﻿using GestaoTarefas.Domain.Entities;
 using GestaoTarefas.Domain.Interfaces;
 using GestaoTarefas.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestaoTarefas.Infra.Repositories;
 
@@ -34,5 +34,10 @@ public class PontuacaoRepository : IPontuacaoRepository
     {
         await _contexto.Pontuacoes.AddAsync(pontuacao);
         await _contexto.SaveChangesAsync();
+    }
+
+    public async Task<bool> ExisteAsync(int tarefaId, int filhoId)
+    {
+        return await _contexto.Pontuacoes.AnyAsync(p => p.TarefaId == tarefaId && p.FilhoId == filhoId);
     }
 }
