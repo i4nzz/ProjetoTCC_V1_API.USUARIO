@@ -8,5 +8,4 @@ public interface IPontuacaoRepository
     Task<int> ObterTotalPontosAsync(int filhoId);
     Task AdicionarAsync(Pontuacao pontuacao);
     Task<bool> ExisteAsync(int tarefaId, int filhoId);
-    Task DebitarPontosAsync(int filhoId, int pontos);
 }

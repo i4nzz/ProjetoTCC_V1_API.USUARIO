@@ -107,40 +107,4 @@ public class PontuacaoService : IPontuacaoService
             Mensagem = "Pontuação adicionada com sucesso"
         };
     }
-
-    public async Task<RespostaMetodos<RetornoPontuacaoDto>> DebitarPontosAsync(int filhoId, int pontos)
-    {
-        var filho = await _usuarioRepository.ObterPorIdAsync(filhoId);
-
-        if (filho == null)
-        {
-            return new RespostaMetodos<RetornoPontuacaoDto>
-            {
-                Sucesso = false,
-                ObjetoRetorno = null,
-                Mensagem = "Filho não encontrado"
-            };
-        }
-
-        var totalPontos = await _pontuacaoRepository.ObterTotalPontosAsync(filhoId);
-
-        if (totalPontos < pontos)
-        {
-            return new RespostaMetodos<RetornoPontuacaoDto>
-            {
-                Sucesso = false,
-                ObjetoRetorno = null,
-                Mensagem = "Pontos insuficientes"
-            };
-        }
-
-        await _pontuacaoRepository.DebitarPontosAsync(filhoId, pontos);
-
-        return new RespostaMetodos<RetornoPontuacaoDto>
-        {
-            Sucesso = true,
-            Mensagem = $"Debitados {pontos} pontos do filho {filhoId}"
-        };
-
-    }
 }

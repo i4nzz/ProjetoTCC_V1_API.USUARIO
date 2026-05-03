@@ -1,4 +1,4 @@
-﻿namespace GestaoTarefas.API.Application.Common.Helper;
+﻿namespace GestaoTarefas.Domain.Helper;
 
 public static class DateTimeHelper
 {

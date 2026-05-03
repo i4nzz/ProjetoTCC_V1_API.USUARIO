@@ -1,3 +1,5 @@
+using GestaoTarefas.API.Domain.Interfaces;
+using GestaoTarefas.API.Infra.Repositories;
 using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Application.Services;
 using GestaoTarefas.Domain.Interfaces;
@@ -33,6 +35,7 @@ public static class ConfiguracaoInjecaoDeDependencia
         services.AddScoped<IPontuacaoRepository, PontuacaoRepository>();
         services.AddScoped<IRecompensaRepository, RecompensaRepository>();
         services.AddScoped<IComprovacaoRepository, ComprovacaoRepository>();
+        services.AddScoped<IResgatePontuacaoRepository, ResgatePontuacaoRepository>();
         #endregion
 
         return services;

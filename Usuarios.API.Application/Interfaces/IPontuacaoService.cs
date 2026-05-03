@@ -8,5 +8,4 @@ public interface IPontuacaoService
     Task<RespostaMetodos<IEnumerable<RetornoPontuacaoDto>>> ObterPorFilhoAsync(int filhoId);
     Task<RespostaMetodos<int>> ObterTotalPontosAsync(int filhoId);
     Task<RespostaMetodos<RetornoPontuacaoDto>> AdicionarAsync(CriarPontuacaoDto dto);
-    Task<RespostaMetodos<RetornoPontuacaoDto>> DebitarPontosAsync(int filhoId, int pontos);
 }

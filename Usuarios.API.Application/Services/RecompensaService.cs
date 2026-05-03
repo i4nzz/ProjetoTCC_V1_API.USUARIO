@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using GestaoTarefas.API.Domain.Interfaces;
 using GestaoTarefas.Application.Common.Responses;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;
@@ -13,16 +14,19 @@ public class RecompensaService : IRecompensaService
     private readonly IRecompensaRepository _recompensaRepository;
     private readonly IPontuacaoRepository _pontuacaoRepository;
     private readonly IUsuarioRepository _usuarioRepository;
+    private readonly IResgatePontuacaoRepository _resgatePontuacaoRepository;
 
     public RecompensaService(
         IRecompensaRepository recompensaRepository
         , IPontuacaoRepository pontuacaoRepository
         , IUsuarioRepository usuarioRepository
+        , IResgatePontuacaoRepository resgatePontuacaoRepository
         )
     {
         _recompensaRepository = recompensaRepository;
         _pontuacaoRepository = pontuacaoRepository;
         _usuarioRepository = usuarioRepository;
+        _resgatePontuacaoRepository = resgatePontuacaoRepository;
     }
 
     public async Task<RespostaMetodos<IEnumerable<RetornoRecompensaDto>>> ObterPorFilhoAsync(int filhoId)
@@ -210,7 +214,9 @@ public class RecompensaService : IRecompensaService
 
         var resgatada = new RecompensaResgatada(filhoId, recompensaId);
         await _recompensaRepository.ResgatarAsync(resgatada);
-        await _pontuacaoRepository.DebitarPontosAsync(filhoId, recompensa.PontosNecessarios);
+
+        var resgate = ResgatePontuacao.Criar(filhoId, recompensaId, recompensa.PontosNecessarios);
+        await _resgatePontuacaoRepository.AdicionarAsync(resgate);
 
         var retornoResgatada = resgatada.ToDto();
 

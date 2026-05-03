@@ -40,11 +40,4 @@ public class PontuacaoRepository : IPontuacaoRepository
     {
         return await _contexto.Pontuacoes.AnyAsync(p => p.TarefaId == tarefaId && p.FilhoId == filhoId);
     }
-
-    public async Task DebitarPontosAsync(int filhoId, int pontos)
-    {
-        var debito = Pontuacao.CriarResgate(filhoId, pontos);
-        await _contexto.Pontuacoes.AddAsync(debito);
-        await _contexto.SaveChangesAsync();
-    }
 }

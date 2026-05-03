@@ -1,6 +1,6 @@
-﻿using GestaoTarefas.API.Application.Common.Helper;
-using GestaoTarefas.Application.DTOs.Recompensa;
+﻿using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Domain.Entities;
+using GestaoTarefas.Domain.Helper;
 
 namespace GestaoTarefas.Application.Mapping;
 

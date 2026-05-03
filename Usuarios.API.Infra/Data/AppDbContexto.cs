@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using GestaoTarefas.Domain.Entities;
+﻿using GestaoTarefas.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestaoTarefas.Infra.Data;
 
@@ -25,6 +25,7 @@ public class AppDbContexto : DbContext
     public DbSet<Mesada> Mesadas { get; set; }
     public DbSet<RegistroFinanceiro> RegistrosFinanceiros { get; set; }
     public DbSet<CategoriaFinanceira> CategoriasFinanceiras { get; set; }
+    public DbSet<ResgatePontuacao> ResgatesPontuacao { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
