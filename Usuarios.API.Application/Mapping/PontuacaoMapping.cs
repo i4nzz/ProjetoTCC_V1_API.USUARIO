@@ -11,7 +11,7 @@ public static class PontuacaoMapping
         {
             Id = pontuacao.Id,
             FilhoId = pontuacao.FilhoId,
-            TarefaId = pontuacao.TarefaId,
+            TarefaId = pontuacao.TarefaId ?? 0,
             TituloTarefa = pontuacao.Tarefa?.Titulo ?? string.Empty,
             Pontos = pontuacao.Pontos,
             DataRegistro = pontuacao.DataRegistro

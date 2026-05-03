@@ -1,4 +1,5 @@
-﻿using GestaoTarefas.Application.DTOs.Recompensa;
+﻿using GestaoTarefas.API.Application.Common.Helper;
+using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Domain.Entities;
 
 namespace GestaoTarefas.Application.Mapping;
@@ -33,7 +34,7 @@ public static class RecompensaMapping
             RecompensaId = resgatada.RecompensaId,
             DescricaoRecompensa = resgatada.Recompensa?.Descricao,
             PontosUtilizados = resgatada.Recompensa?.PontosNecessarios ?? 0,
-            DataResgate = resgatada.DataResgate
+            DataResgate = resgatada.DataResgate.ToBrazilTime()
         };
     }
 

@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using GestaoTarefas.Application.Common.Responses;
-using GestaoTarefas.Application.DTOs.Pontuacao;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Application.Mapping;
@@ -14,17 +13,14 @@ public class ComprovacaoService : IComprovacaoService
 {
     private readonly IComprovacaoRepository _comprovacaoRepository;
     private readonly ITarefaRepository _tarefaRepository;
-    private readonly IPontuacaoService _pontuacaoService;
     private readonly IPontuacaoRepository _pontuacaoRepository;
     public ComprovacaoService(
         IComprovacaoRepository comprovacaoRepository
         , IPontuacaoRepository pontuacaoRepository
         , ITarefaRepository tarefaRepository
-        , IPontuacaoService pontuacaoService
         )
     {
         _comprovacaoRepository = comprovacaoRepository;
-        _pontuacaoService = pontuacaoService;
         _tarefaRepository = tarefaRepository;
         _pontuacaoRepository = pontuacaoRepository;
     }
@@ -132,17 +128,10 @@ public class ComprovacaoService : IComprovacaoService
                 return new RespostaMetodos<RetornoComprovacaoDto>
                 {
                     Sucesso = true,
-                    ObjetoRetorno = comprovacao.ToDto(),
+                    ObjetoRetorno = null,
                     Mensagem = "Comprovação já estava aprovada"
                 };
             }
-
-            var pontuacaoTarefa = new CriarPontuacaoDto()
-            {
-                FilhoId = retornoTarefa.FilhoId,
-                TarefaId = retornoTarefa.TarefaId,
-                Pontos = retornoTarefa.Pontos,
-            };
 
             comprovacao.Aprovar();
 
@@ -150,7 +139,8 @@ public class ComprovacaoService : IComprovacaoService
 
             if (!existePontos)
             {
-                await _pontuacaoService.AdicionarAsync(pontuacaoTarefa);
+                var pontuacao = Pontuacao.CriarGanho(retornoTarefa.FilhoId, retornoTarefa.TarefaId, retornoTarefa.Pontos);
+                await _pontuacaoRepository.AdicionarAsync(pontuacao);
             }
         }
         else
@@ -160,7 +150,7 @@ public class ComprovacaoService : IComprovacaoService
                 return new RespostaMetodos<RetornoComprovacaoDto>
                 {
                     Sucesso = true,
-                    ObjetoRetorno = comprovacao.ToDto(),
+                    ObjetoRetorno = null,
                     Mensagem = "Comprovação já estava reprovada"
                 };
             }
@@ -177,11 +167,12 @@ public class ComprovacaoService : IComprovacaoService
             comprovacao.Reprovar();
         }
         await _comprovacaoRepository.AtualizarAsync(comprovacao);
+        var retornoComprovacao = comprovacao.ToDto();
 
         return new RespostaMetodos<RetornoComprovacaoDto>
         {
             Sucesso = true,
-            ObjetoRetorno = comprovacao.ToDto(),
+            ObjetoRetorno = retornoComprovacao,
             Mensagem = aprovar ? "Comprovação aprovada com sucesso" : "Comprovação reprovada com sucesso"
         };
     }

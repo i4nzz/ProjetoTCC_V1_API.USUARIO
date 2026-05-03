@@ -22,7 +22,8 @@ namespace GestaoTarefas.Infra.Mappings
 
             builder.Property(x => x.Status)
                    .HasConversion<int>()
-                   .HasDefaultValue(StatusValidacaoTarefaEnum.Pendente);
+                   .HasDefaultValue(StatusValidacaoTarefaEnum.Pendente)
+                   .HasSentinel(StatusValidacaoTarefaEnum.Pendente);
 
             builder.HasOne(x => x.Tarefa)
                    .WithMany(t => t.Comprovacoes)

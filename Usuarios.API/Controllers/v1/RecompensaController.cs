@@ -1,16 +1,22 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoTarefas.Controllers.v1;
 
+/// <summary>
+/// Controller para gerenciar as recompensas associadas aos filhos, permitindo criar, atualizar, deletar e resgatar recompensas, bem como consultar as recompensas disponíveis e resgatadas por cada filho.
+/// </summary>
 [ApiController]
 [Route("api/v1/[controller]")]
 public class RecompensaController : ControllerBase
 {
     private readonly IRecompensaService _recompensaService;
-
+    /// <summary>
+    /// Construtor do RecompensaController, que recebe uma instância de IRecompensaService para realizar as operações relacionadas às recompensas. Essa dependência é injetada via construtor, seguindo o princípio de inversão de dependência e facilitando a testabilidade do controller.
+    /// </summary>
+    /// <param name="recompensaService"></param>
     public RecompensaController(IRecompensaService recompensaService)
     {
         _recompensaService = recompensaService;

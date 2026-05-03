@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using GestaoTarefas.Domain.Entities;
+﻿using GestaoTarefas.Domain.Entities;
 using GestaoTarefas.Domain.Interfaces;
 using GestaoTarefas.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestaoTarefas.Infra.Repositories;
 
@@ -61,6 +61,7 @@ public class RecompensaRepository : IRecompensaRepository
     {
         return await _contexto.RecompensasResgatadas
             .Include(r => r.Recompensa)
+            .Include(r => r.Filho)
             .Where(r => r.FilhoId == filhoId)
             .OrderByDescending(r => r.DataResgate)
             .ToListAsync();

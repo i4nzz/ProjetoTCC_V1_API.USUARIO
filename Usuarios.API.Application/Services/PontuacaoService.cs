@@ -82,7 +82,7 @@ public class PontuacaoService : IPontuacaoService
             };
         }
 
-        var tarefa = _tarefaRepository.ObterPorIdAsync(dto.TarefaId);
+        var tarefa = await _tarefaRepository.ObterPorIdAsync(dto.TarefaId);
 
         if (tarefa == null)
         {
@@ -94,12 +94,7 @@ public class PontuacaoService : IPontuacaoService
             };
         }
 
-        var pontuacao = new Pontuacao
-        {
-            FilhoId = dto.FilhoId,
-            TarefaId = dto.TarefaId,
-            Pontos = dto.Pontos
-        };
+        var pontuacao = Pontuacao.CriarGanho(dto.FilhoId, dto.TarefaId, dto.Pontos);
 
         await _pontuacaoRepository.AdicionarAsync(pontuacao);
 
@@ -111,5 +106,41 @@ public class PontuacaoService : IPontuacaoService
             ObjetoRetorno = retornoPontuacao,
             Mensagem = "Pontuação adicionada com sucesso"
         };
+    }
+
+    public async Task<RespostaMetodos<RetornoPontuacaoDto>> DebitarPontosAsync(int filhoId, int pontos)
+    {
+        var filho = await _usuarioRepository.ObterPorIdAsync(filhoId);
+
+        if (filho == null)
+        {
+            return new RespostaMetodos<RetornoPontuacaoDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Filho não encontrado"
+            };
+        }
+
+        var totalPontos = await _pontuacaoRepository.ObterTotalPontosAsync(filhoId);
+
+        if (totalPontos < pontos)
+        {
+            return new RespostaMetodos<RetornoPontuacaoDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Pontos insuficientes"
+            };
+        }
+
+        await _pontuacaoRepository.DebitarPontosAsync(filhoId, pontos);
+
+        return new RespostaMetodos<RetornoPontuacaoDto>
+        {
+            Sucesso = true,
+            Mensagem = $"Debitados {pontos} pontos do filho {filhoId}"
+        };
+
     }
 }

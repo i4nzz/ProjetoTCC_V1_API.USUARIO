@@ -210,6 +210,7 @@ public class RecompensaService : IRecompensaService
 
         var resgatada = new RecompensaResgatada(filhoId, recompensaId);
         await _recompensaRepository.ResgatarAsync(resgatada);
+        await _pontuacaoRepository.DebitarPontosAsync(filhoId, recompensa.PontosNecessarios);
 
         var retornoResgatada = resgatada.ToDto();
 

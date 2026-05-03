@@ -53,9 +53,11 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro inesperado");
-            await EscreverResposta(httpContext, HttpStatusCode.InternalServerError, "Erro interno no servidor");
+            var innerMessage = ex.InnerException?.Message ?? "Sem inner exception";
+            _logger.LogError(ex, "Erro inesperado: {Message} | Inner: {Inner}", ex.Message, innerMessage);
+            await EscreverResposta(httpContext, HttpStatusCode.InternalServerError, $"{ex.Message} | Inner: {innerMessage}");
         }
+
     }
 
     private static async Task EscreverResposta(HttpContext httpContext, HttpStatusCode statusCode, string mensagem)
