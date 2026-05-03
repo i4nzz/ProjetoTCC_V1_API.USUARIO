@@ -68,19 +68,19 @@ GestaoTarefas/
 ## 🗄️ Modelo de Dados
 
 ```
-usuario         → dados base do usuário (Pai ou Filho)
-pai             → extensão para perfil Pai
-filho           → extensão para perfil Filho (DataNascimento)
-pais_filhos     → vínculo entre Pai e Filho (N:N)
-tarefa          → tarefas criadas pelo Pai para o Filho
-comprovacao_tarefa → foto enviada pelo Filho como comprovação
-pontuacao       → pontos ganhos pelo Filho ao completar tarefas
-resgate_pontuacao → registro de pontos debitados ao resgatar recompensas
-recompensa      → recompensas cadastradas pelo Pai
-recompensa_resgatada → histórico de resgates do Filho
-mesada          → controle de mesada do Filho
-registro_financeiro → gastos registrados da mesada
-categoria_financeira → categorias dos gastos
+usuario               → dados base do usuário (Pai ou Filho)
+pai                   → extensão para perfil Pai
+filho                 → extensão para perfil Filho (DataNascimento)
+pais_filhos           → vínculo entre Pai e Filho (N:N)
+tarefa                → tarefas criadas pelo Pai para o Filho
+comprovacao_tarefa    → foto enviada pelo Filho como comprovação
+pontuacao             → pontos ganhos pelo Filho ao completar tarefas
+resgate_pontuacao     → registro de pontos debitados ao resgatar recompensas
+recompensa            → recompensas cadastradas pelo Pai
+recompensa_resgatada  → histórico de resgates do Filho
+mesada                → controle de mesada do Filho
+registro_financeiro   → gastos registrados da mesada
+categoria_financeira  → categorias dos gastos
 ```
 
 ---
