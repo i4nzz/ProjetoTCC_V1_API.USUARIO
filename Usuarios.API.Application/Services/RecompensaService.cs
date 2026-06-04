@@ -137,7 +137,7 @@ public class RecompensaService : IRecompensaService
                 Mensagem = "Recompensa não encontrada."
             };
         }
-
+        recompensa.FilhoId = dto.FilhoId;
         recompensa.Descricao = dto.Descricao;
         recompensa.PontosNecessarios = dto.PontosNecessarios;
 
@@ -163,6 +163,19 @@ public class RecompensaService : IRecompensaService
             {
                 Sucesso = false,
                 Mensagem = "Recompensa não encontrada."
+            };
+        }
+
+        if (recompensa.Ativa)
+        {
+            recompensa.Ativa = false;
+            await _recompensaRepository.AtualizarAsync(recompensa);
+
+            return new RespostaMetodos<RetornoRecompensaDto>
+            {
+                Sucesso = true,
+                StatusCode = HttpStatusCode.OK,
+                Mensagem = "Recompensa desativada com sucesso."
             };
         }
 
@@ -214,6 +227,9 @@ public class RecompensaService : IRecompensaService
 
         var resgatada = new RecompensaResgatada(filhoId, recompensaId);
         await _recompensaRepository.ResgatarAsync(resgatada);
+
+        var debito = Pontuacao.CriarResgate(filhoId, recompensa.PontosNecessarios);
+        await _pontuacaoRepository.AdicionarAsync(debito);
 
         var resgate = ResgatePontuacao.Criar(filhoId, recompensaId, recompensa.PontosNecessarios);
         await _resgatePontuacaoRepository.AdicionarAsync(resgate);

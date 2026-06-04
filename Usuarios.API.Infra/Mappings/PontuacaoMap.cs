@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GestaoTarefas.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using GestaoTarefas.Domain.Entities;
 
 namespace GestaoTarefas.Infra.Mappings
 {
@@ -24,8 +24,9 @@ namespace GestaoTarefas.Infra.Mappings
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Tarefa)
-                   .WithOne()
-                   .HasForeignKey<Pontuacao>(x => x.TarefaId)
+                   .WithMany()
+                   .HasForeignKey(x => x.TarefaId)
+                   .IsRequired(false)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }

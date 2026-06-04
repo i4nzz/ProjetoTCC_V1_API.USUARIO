@@ -183,6 +183,7 @@ public class TarefaService : ITarefaService
         }
 
         tarefa.Titulo = dto.Titulo;
+        tarefa.FilhoId = dto.FilhoId;
         tarefa.Descricao = dto.Descricao;
         tarefa.Pontos = dto.Pontos;
         tarefa.Prazo = dto.Prazo;

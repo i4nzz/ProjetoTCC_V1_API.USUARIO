@@ -99,6 +99,6 @@ public class ComprovacaoTarefaController : ControllerBase
             return StatusCode((int)HttpStatusCode.BadRequest, resultado.Mensagem);
         }
 
-        return StatusCode((int)HttpStatusCode.OK, resultado.ObjetoRetorno);
+        return StatusCode((int)HttpStatusCode.OK, resultado.Mensagem);
     }
 }
