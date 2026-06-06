@@ -1,3 +1,5 @@
+using GestaoTarefas.API.Application.Interfaces;
+using GestaoTarefas.API.Application.Services;
 using GestaoTarefas.API.Domain.Interfaces;
 using GestaoTarefas.API.Infra.Repositories;
 using GestaoTarefas.Application.Interfaces;
@@ -27,6 +29,7 @@ public static class ConfiguracaoInjecaoDeDependencia
         services.AddScoped<IRecompensaService, RecompensaService>();
         services.AddScoped<IComprovacaoService, ComprovacaoService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IEmailService, EmailService>();
         #endregion
 
         #region Repositories
