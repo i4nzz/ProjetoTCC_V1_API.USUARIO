@@ -1,3 +1,4 @@
+using GestaoTarefas.API.IoC;
 using GestaoTarefas.API.Middlewares;
 using GestaoTarefas.Ioc;
 using GestaoTarefas.IoC;
@@ -13,7 +14,8 @@ builder.Services
     .AddDatabase(builder.Configuration)
     .AddJwtAuthentication(builder.Configuration)
     .AddSwaggerConfiguration()
-    .AddInfrastructure()
+    .AddInfrastructure(builder.Configuration)
+    .AddResendEmail(builder.Configuration)
     .AddControllers();
 
 var app = builder.Build();

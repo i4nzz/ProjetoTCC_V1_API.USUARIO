@@ -16,11 +16,12 @@ namespace GestaoTarefas.Ioc;
 public static class ConfiguracaoInjecaoDeDependencia
 {
     /// <summary>
-    /// Resolver as dependencias
+    /// 
     /// </summary>
     /// <param name="services"></param>
+    /// <param name="configuration"></param>
     /// <returns></returns>
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         #region Services
         services.AddScoped<IUsuarioService, UsuarioService>();

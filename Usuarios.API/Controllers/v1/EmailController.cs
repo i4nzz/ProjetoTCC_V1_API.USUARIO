@@ -66,6 +66,12 @@ public class EmailController : ControllerBase
 
         return StatusCode((int)HttpStatusCode.BadRequest, result.Mensagem);
     }
+    /// <summary>
+    /// Enviar email de confirmação.
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
 
     [HttpPost("confirmation")]
     [ProducesResponseType(typeof(EmailResult), StatusCodes.Status200OK)]
@@ -95,8 +101,7 @@ public class EmailController : ControllerBase
     [ProducesResponseType(typeof(EmailResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> SendPasswordReset([FromBody] SendConfirmationEmailDto dto,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> SendPasswordReset([FromBody] SendConfirmationEmailDto dto, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
         {
@@ -107,34 +112,33 @@ public class EmailController : ControllerBase
 
         if (result.Sucesso)
         {
-
+            return StatusCode((int)HttpStatusCode.OK, result.ObjetoRetorno);
         }
-    }
 
-    // -------------------------------------------------------------------------
+        return StatusCode((int)HttpStatusCode.BadRequest, result.Mensagem);
+    }
 
     /// <summary>
     /// Envia uma notificação genérica do sistema.
     /// </summary>
     [HttpPost("notification")]
-    [ProducesResponseType(typeof(EmailResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EmailResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> SendNotification(
-        [FromBody] SendNotificationDto dto,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> SendNotification([FromBody] SendNotificationDto dto, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        {
+            return StatusCode((int)HttpStatusCode.UnprocessableEntity, MensagemModelState);
+        }
 
-        var result = await _emailService.SendSystemNotificationAsync(
-            dto.ToEmail,
-            dto.Subject,
-            dto.Message,
-            cancellationToken);
+        var result = await _emailService.EnviarNotificacaoSistemaAsync(dto.ToEmail, dto.Subject, dto.Message, cancellationToken);
 
-        return result.Success
-            ? Ok(result)
-            : StatusCode(StatusCodes.Status500InternalServerError, result);
+        if (result.Sucesso)
+        {
+            return StatusCode((int)HttpStatusCode.OK, result.ObjetoRetorno);
+        }
+
+        return StatusCode((int)HttpStatusCode.BadRequest, result.Mensagem);
     }
 }
