@@ -13,13 +13,16 @@ public class UsuarioService : IUsuarioService
 {
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ITokenService _tokenService;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
     public UsuarioService(
         IUsuarioRepository usuarioRepository
-        , ITokenService tokenService)
+        , ITokenService tokenService
+        , IRefreshTokenRepository refreshTokenRepository)
     {
         _usuarioRepository = usuarioRepository;
         _tokenService = tokenService;
+        _refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task<RespostaMetodos<IEnumerable<RetornoUsuarioDto>>> ObterTodosAsync()
@@ -190,21 +193,81 @@ public class UsuarioService : IUsuarioService
                 Mensagem = "Email ou senha inválidos"
             };
         }
-        var token = _tokenService.GerarToken(usuario);
+
+        var (accessToken, expiracao) = _tokenService.GerarAccessToken(usuario);
+        var refreshTokenValor = _tokenService.GerarRefreshToken();
+        var validadeRefreshToken = _tokenService.ObterValidadeRefreshToken();
+
+        var refreshToken = new RefreshToken(usuario.Id, refreshTokenValor, validadeRefreshToken);
+        await _refreshTokenRepository.AdicionarAsync(refreshToken);
 
         return new RespostaMetodos<RetornoLoginDto>
         {
             Sucesso = true,
             ObjetoRetorno = new RetornoLoginDto
             {
-                Token = token,
+                AccessToken = accessToken,
+                RefreshToken = refreshTokenValor,
                 Nome = usuario.Nome,
                 Email = usuario.Email,
                 Perfil = usuario.Perfil.ToString(),
-                Expiracao = DateTime.UtcNow.AddHours(1)
+                Expiracao = expiracao
             },
             Mensagem = "Login realizado com sucesso"
         };
     }
 
+
+    public async Task<RespostaMetodos<RetornoLoginDto>> RefreshTokenAsync(RefreshTokenDto dto)
+    {
+        var refreshTokenAtual = await _refreshTokenRepository.ObterPorTokenAsync(dto.RefreshToken);
+
+        if (refreshTokenAtual == null || !refreshTokenAtual.EstaAtivo)
+        {
+            return new RespostaMetodos<RetornoLoginDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Refresh token inválido ou expirado"
+            };
+        }
+
+        var usuario = await _usuarioRepository.ObterPorIdAsync(refreshTokenAtual.UsuarioId);
+
+        if (usuario == null)
+        {
+            return new RespostaMetodos<RetornoLoginDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Usuário não encontrado"
+            };
+        }
+
+        var (accessToken, expiracao) = _tokenService.GerarAccessToken(usuario);
+        var novoRefreshTokenValor = _tokenService.GerarRefreshToken();
+        var validadeRefreshToken = _tokenService.ObterValidadeRefreshToken();
+        var novoRefreshToken = new RefreshToken(usuario.Id, novoRefreshTokenValor, validadeRefreshToken);
+
+        refreshTokenAtual.Revogar(novoRefreshTokenValor);
+
+        await _refreshTokenRepository.AtualizarAsync(refreshTokenAtual);
+        await _refreshTokenRepository.AdicionarAsync(novoRefreshToken);
+
+        return new RespostaMetodos<RetornoLoginDto>
+        {
+            Sucesso = true,
+            ObjetoRetorno = new RetornoLoginDto
+            {
+                AccessToken = accessToken,
+                RefreshToken = novoRefreshTokenValor,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Perfil = usuario.Perfil.ToString(),
+                Expiracao = expiracao
+            },
+            Mensagem = "Token renovado com sucesso"
+        };
+    }
 }
+

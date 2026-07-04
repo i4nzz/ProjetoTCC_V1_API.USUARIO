@@ -39,7 +39,7 @@ public static class ConfiguracoesSwagger
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Insira o token JWT assim: Bearer eyJh..."
+                Description = "Insira o token JWT assim: Bearer eyjwt123..."
             });
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {

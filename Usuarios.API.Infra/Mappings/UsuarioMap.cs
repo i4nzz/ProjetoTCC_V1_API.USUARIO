@@ -9,7 +9,6 @@ public class UsuarioMap : IEntityTypeConfiguration<Usuario>
     public void Configure(EntityTypeBuilder<Usuario> builder)
     {
         builder.ToTable("usuario");
-
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Nome)
@@ -30,5 +29,23 @@ public class UsuarioMap : IEntityTypeConfiguration<Usuario>
 
         builder.Property(x => x.Perfil)
             .IsRequired();
+
+        builder.Property(x => x.EmailConfirmado)
+            .HasDefaultValue(false)
+            .IsRequired();
+
+        builder.Property(x => x.TokenConfirmacaoEmail)
+            .HasMaxLength(64)
+            .IsRequired(false);
+
+        builder.Property(x => x.TokenConfirmacaoExpiracao)
+            .IsRequired(false);
+
+        builder.Property(x => x.TokenResetSenha)
+            .HasMaxLength(64)
+            .IsRequired(false);
+
+        builder.Property(x => x.TokenResetSenhaExpiracao)
+            .IsRequired(false);
     }
 }

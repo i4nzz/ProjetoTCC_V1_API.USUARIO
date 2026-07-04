@@ -40,6 +40,7 @@ public static class ConfiguracaoInjecaoDeDependencia
         services.AddScoped<IRecompensaRepository, RecompensaRepository>();
         services.AddScoped<IComprovacaoRepository, ComprovacaoRepository>();
         services.AddScoped<IResgatePontuacaoRepository, ResgatePontuacaoRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         #endregion
 
         return services;

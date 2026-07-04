@@ -1,4 +1,5 @@
-﻿using GestaoTarefas.Domain.Entities;
+﻿using GestaoTarefas.API.Domain.Entities;
+using GestaoTarefas.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestaoTarefas.Infra.Data;
@@ -12,6 +13,7 @@ public class AppDbContexto : DbContext
     public DbSet<Pai> Pais { get; set; }
     public DbSet<Filho> Filhos { get; set; }
     public DbSet<PaisFilhos> PaisFilhos { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     #endregion
 
     #region Gameficação

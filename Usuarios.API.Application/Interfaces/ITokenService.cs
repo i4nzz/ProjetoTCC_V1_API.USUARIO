@@ -4,5 +4,7 @@ namespace GestaoTarefas.Application.Interfaces;
 
 public interface ITokenService
 {
-    string GerarToken(Usuario usuario);
+    (string Token, DateTime Expiracao) GerarAccessToken(Usuario usuario);
+    string GerarRefreshToken();
+    TimeSpan ObterValidadeRefreshToken();
 }

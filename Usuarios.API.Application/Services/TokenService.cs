@@ -1,10 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Domain.Entities;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GestaoTarefas.Application.Services;
 
@@ -17,31 +18,26 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string GerarToken(Usuario usuario)
+    public (string Token, DateTime Expiracao) GerarAccessToken(Usuario usuario)
     {
         var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];
-        var expiracao = int.Parse(_configuration["Jwt:ExpiracaoHoras"]!);
-
-        Console.WriteLine($"Key: {key}");
-        Console.WriteLine($"Issuer: {issuer}");
-        Console.WriteLine($"Audience: {audience}");
-        Console.WriteLine($"Expiracao: {expiracao}");
-        Console.WriteLine($"Usuario: {usuario?.Nome} | {usuario?.Email}");
+        var expiracaoMinutos = int.Parse(_configuration["Jwt:ExpiracaoMinutos"] ?? "15");
+        var expiracao = DateTime.UtcNow.AddMinutes(expiracaoMinutos);
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-            new Claim(ClaimTypes.Name, usuario.Nome),
-            new Claim(ClaimTypes.Email, usuario.Email),
-            new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
-        };
+        new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+        new Claim(ClaimTypes.Name, usuario.Nome),
+        new Claim(ClaimTypes.Email, usuario.Email),
+        new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
+    };
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(expiracao),
+            Expires = expiracao,
             Issuer = issuer,
             Audience = audience,
             SigningCredentials = new SigningCredentials(
@@ -51,6 +47,19 @@ public class TokenService : ITokenService
 
         var handler = new JwtSecurityTokenHandler();
         var token = handler.CreateToken(tokenDescriptor);
-        return handler.WriteToken(token);
+
+        return (handler.WriteToken(token), expiracao);
+    }
+
+    public string GerarRefreshToken()
+    {
+        var bytes = RandomNumberGenerator.GetBytes(64);
+        return Convert.ToBase64String(bytes);
+    }
+
+    public TimeSpan ObterValidadeRefreshToken()
+    {
+        var dias = int.Parse(_configuration["Jwt:RefreshTokenExpiracaoDias"] ?? "7");
+        return TimeSpan.FromDays(dias);
     }
 }
