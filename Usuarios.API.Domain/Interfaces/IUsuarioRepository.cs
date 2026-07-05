@@ -12,5 +12,7 @@ public interface IUsuarioRepository
     Task<Usuario?> ObterPorEmailAsync(string email);
     Task AdicionarFilhoAsync(Filho filho, PaisFilhos vinculo);
     Task<Usuario?> ObterPorTokenConfirmacaoEmailAsync(string token);
+    Task<Usuario?> ObterPorTokenResetSenhaAsync(string token);
+
 }
 

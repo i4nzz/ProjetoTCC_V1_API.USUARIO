@@ -14,5 +14,7 @@ public interface IUsuarioService
     Task<RespostaMetodos<RetornoLoginDto>> LoginAsync(LoginDto dto);
     Task<RespostaMetodos<RetornoLoginDto>> RefreshTokenAsync(RefreshTokenDto dto);
     Task<RespostaMetodos<object?>> ConfirmarEmailAsync(ConfirmarEmailDto dto);
+    Task<RespostaMetodos<object?>> EsqueciSenhaAsync(EsqueciSenhaDto dto);
+    Task<RespostaMetodos<object?>> RedefinirSenhaAsync(RedefinirSenhaDto dto);
 
 }

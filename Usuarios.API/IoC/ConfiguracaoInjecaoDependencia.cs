@@ -1,12 +1,10 @@
 using GestaoTarefas.API.Application.Interfaces;
 using GestaoTarefas.API.Application.Services;
 using GestaoTarefas.API.Domain.Interfaces;
-using GestaoTarefas.API.Infra.Repositories;
 using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Application.Services;
 using GestaoTarefas.Domain.Interfaces;
 using GestaoTarefas.Infra.Repositories;
-using GestaoTarefas.Infrastructure.Repositories;
 
 namespace GestaoTarefas.Ioc;
 

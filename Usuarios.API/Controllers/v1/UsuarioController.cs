@@ -1,17 +1,24 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using GestaoTarefas.Application.DTOs.Login;
 using GestaoTarefas.Application.DTOs.Usuario;
 using GestaoTarefas.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoTarefas.Controllers.v1;
 
+/// <summary>
+/// 
+/// </summary>
 [ApiController]
 [Route("api/v1/[controller]")]
 public class UsuarioController : ControllerBase
 {
     private readonly IUsuarioService _usuarioService;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="usuarioService"></param>
     public UsuarioController(IUsuarioService usuarioService)
     {
         _usuarioService = usuarioService;
@@ -142,5 +149,42 @@ public class UsuarioController : ControllerBase
         }
 
         return StatusCode((int)HttpStatusCode.Created, resultado.ObjetoRetorno);
+    }
+
+    /// <summary>
+    /// Solicita redefinição de senha. Sempre retorna a mesma resposta, exista ou não o e-mail informado.
+    /// </summary>
+    [HttpPost("EsqueciSenha")]
+    public async Task<IActionResult> EsqueciSenha([FromBody] EsqueciSenhaDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var resultado = await _usuarioService.EsqueciSenhaAsync(dto);
+
+        return StatusCode((int)HttpStatusCode.OK, resultado);
+    }
+
+    /// <summary>
+    /// Redefine a senha a partir de um token válido recebido por e-mail.
+    /// </summary>
+    [HttpPost("RedefinirSenha")]
+    public async Task<IActionResult> RedefinirSenha([FromBody] RedefinirSenhaDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var resultado = await _usuarioService.RedefinirSenhaAsync(dto);
+
+        if (!resultado.Sucesso)
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest, resultado);
+        }
+
+        return StatusCode((int)HttpStatusCode.OK, resultado);
     }
 }

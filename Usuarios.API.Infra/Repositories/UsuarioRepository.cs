@@ -15,6 +15,11 @@ public class UsuarioRepository : IUsuarioRepository
         _context = context;
     }
 
+    public async Task<Usuario?> ObterPorTokenResetSenhaAsync(string token)
+    {
+        return await _context.Usuarios.FirstOrDefaultAsync(u => u.TokenResetSenha == token);
+    }
+
     public async Task<Usuario?> ObterPorIdAsync(int id)
     {
         return await _context.Usuarios.FirstOrDefaultAsync(x => x.Id == id);

@@ -57,6 +57,71 @@ public class UsuarioService : IUsuarioService
         };
     }
 
+    public async Task<RespostaMetodos<object?>> EsqueciSenhaAsync(EsqueciSenhaDto dto)
+    {
+        const string mensagemGenerica = "Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.";
+
+        var usuario = await _usuarioRepository.ObterPorEmailAsync(dto.Email);
+
+        if (usuario != null && usuario.Ativo)
+        {
+            var expiracaoHoras = int.Parse(_configuration["ResetSenha:ExpiracaoHoras"] ?? "1");
+            var token = usuario.GerarTokenResetSenha(TimeSpan.FromHours(expiracaoHoras));
+
+            await _usuarioRepository.AtualizarAsync(usuario);
+
+            var baseUrl = _configuration["UrlsFrontend:BaseUrl"];
+            var path = _configuration["UrlsFrontend:RedefinicaoSenhaPath"];
+            var link = $"{baseUrl}{path}?token={token}";
+
+            await _emailService.EnviarEmailResetSenhaAsync(usuario.Email, usuario.Nome, link);
+        }
+
+        return new RespostaMetodos<object?>
+        {
+            Sucesso = true,
+            ObjetoRetorno = null,
+            Mensagem = mensagemGenerica
+        };
+    }
+
+    public async Task<RespostaMetodos<object?>> RedefinirSenhaAsync(RedefinirSenhaDto dto)
+    {
+        var usuario = await _usuarioRepository.ObterPorTokenResetSenhaAsync(dto.Token);
+
+        if (usuario == null || !usuario.ValidarTokenResetSenha(dto.Token))
+        {
+            return new RespostaMetodos<object?>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Token de redefinição inválido ou expirado"
+            };
+        }
+
+        if (!usuario.EmailConfirmado)
+        {
+            return new RespostaMetodos<object?>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Confirme seu e-mail antes de redefinir a senha"
+            };
+        }
+
+        var novaSenhaHash = BCrypt.Net.BCrypt.HashPassword(dto.NovaSenha);
+        usuario.RedefinirSenha(novaSenhaHash);
+
+        await _usuarioRepository.AtualizarAsync(usuario);
+
+        return new RespostaMetodos<object?>
+        {
+            Sucesso = true,
+            ObjetoRetorno = null,
+            Mensagem = "Senha redefinida com sucesso"
+        };
+    }
+
     public async Task<RespostaMetodos<RetornoUsuarioDto?>> ObterPorIdAsync(int id)
     {
         var usuario = await _usuarioRepository.ObterPorIdAsync(id);
