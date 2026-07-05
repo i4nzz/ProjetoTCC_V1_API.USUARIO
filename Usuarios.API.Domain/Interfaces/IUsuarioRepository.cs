@@ -11,5 +11,6 @@ public interface IUsuarioRepository
     Task RemoverAsync(int id);
     Task<Usuario?> ObterPorEmailAsync(string email);
     Task AdicionarFilhoAsync(Filho filho, PaisFilhos vinculo);
+    Task<Usuario?> ObterPorTokenConfirmacaoEmailAsync(string token);
 }
 

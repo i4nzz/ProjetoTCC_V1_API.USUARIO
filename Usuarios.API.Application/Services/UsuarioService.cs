@@ -1,4 +1,5 @@
-﻿using GestaoTarefas.Application.Common.Responses;
+﻿using GestaoTarefas.API.Application.Interfaces;
+using GestaoTarefas.Application.Common.Responses;
 using GestaoTarefas.Application.DTOs.Login;
 using GestaoTarefas.Application.DTOs.Usuario;
 using GestaoTarefas.Application.Interfaces;
@@ -6,6 +7,7 @@ using GestaoTarefas.Application.Mapping;
 using GestaoTarefas.Domain.Entities;
 using GestaoTarefas.Domain.Enum;
 using GestaoTarefas.Domain.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace GestaoTarefas.Application.Services;
 
@@ -14,15 +16,21 @@ public class UsuarioService : IUsuarioService
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ITokenService _tokenService;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IEmailService _emailService;
+    private readonly IConfiguration _configuration;
 
     public UsuarioService(
-        IUsuarioRepository usuarioRepository
-        , ITokenService tokenService
-        , IRefreshTokenRepository refreshTokenRepository)
+        IUsuarioRepository usuarioRepository,
+        ITokenService tokenService,
+        IRefreshTokenRepository refreshTokenRepository,
+        IEmailService emailService,
+        IConfiguration configuration)
     {
         _usuarioRepository = usuarioRepository;
         _tokenService = tokenService;
         _refreshTokenRepository = refreshTokenRepository;
+        _emailService = emailService;
+        _configuration = configuration;
     }
 
     public async Task<RespostaMetodos<IEnumerable<RetornoUsuarioDto>>> ObterTodosAsync()
@@ -78,15 +86,62 @@ public class UsuarioService : IUsuarioService
         var senhaHash = BCrypt.Net.BCrypt.HashPassword(dto.Senha);
         var pai = new Pai(dto.Nome, dto.Email, senhaHash);
 
+        var expiracaoHoras = int.Parse(_configuration["ConfirmacaoEmail:ExpiracaoHoras"] ?? "24");
+        var token = pai.GerarTokenConfirmacaoEmail(TimeSpan.FromHours(expiracaoHoras));
+
         await _usuarioRepository.AdicionarAsync(pai);
 
-        var usuarioRetorno = pai.ToDto();
+        var baseUrl = _configuration["UrlsFrontend:BaseUrl"];
+        var path = _configuration["UrlsFrontend:ConfirmacaoEmailPath"];
+        var link = $"{baseUrl}{path}?token={token}";
+
+        var resultadoEmail = await _emailService.EnviarEmailConfirmacaoAsync(pai.Email, pai.Nome, link);
+
+        var mensagem = resultadoEmail.Sucesso
+            ? "Usuário criado com sucesso. Verifique seu e-mail para confirmar a conta."
+            : "Usuário criado com sucesso, mas houve falha ao enviar o e-mail de confirmação.";
 
         return new RespostaMetodos<RetornoUsuarioDto>
         {
             Sucesso = true,
-            ObjetoRetorno = usuarioRetorno,
-            Mensagem = "Usuário criado com sucesso"
+            ObjetoRetorno = pai.ToDto(),
+            Mensagem = mensagem
+        };
+    }
+
+    public async Task<RespostaMetodos<object?>> ConfirmarEmailAsync(ConfirmarEmailDto dto)
+    {
+        var usuario = await _usuarioRepository.ObterPorTokenConfirmacaoEmailAsync(dto.Token);
+
+        if (usuario == null)
+        {
+            return new RespostaMetodos<object?>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Token de confirmação inválido ou expirado"
+            };
+        }
+
+        var confirmado = usuario.ConfirmarEmail(dto.Token);
+
+        if (!confirmado)
+        {
+            return new RespostaMetodos<object?>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Token de confirmação inválido ou expirado"
+            };
+        }
+
+        await _usuarioRepository.AtualizarAsync(usuario);
+
+        return new RespostaMetodos<object?>
+        {
+            Sucesso = true,
+            ObjetoRetorno = null,
+            Mensagem = "E-mail confirmado com sucesso"
         };
     }
 
@@ -194,6 +249,26 @@ public class UsuarioService : IUsuarioService
             };
         }
 
+        if (!usuario.Ativo)
+        {
+            return new RespostaMetodos<RetornoLoginDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Conta desativada. Entre em contato com o suporte."
+            };
+        }
+
+        if (!usuario.EmailConfirmado)
+        {
+            return new RespostaMetodos<RetornoLoginDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = "Confirme seu e-mail antes de fazer login. Verifique sua caixa de entrada ou a caixa de Spam."
+            };
+        }
+
         var (accessToken, expiracao) = _tokenService.GerarAccessToken(usuario);
         var refreshTokenValor = _tokenService.GerarRefreshToken();
         var validadeRefreshToken = _tokenService.ObterValidadeRefreshToken();
@@ -216,7 +291,6 @@ public class UsuarioService : IUsuarioService
             Mensagem = "Login realizado com sucesso"
         };
     }
-
 
     public async Task<RespostaMetodos<RetornoLoginDto>> RefreshTokenAsync(RefreshTokenDto dto)
     {

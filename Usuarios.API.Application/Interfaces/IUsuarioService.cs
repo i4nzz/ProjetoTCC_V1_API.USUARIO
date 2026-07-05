@@ -12,4 +12,7 @@ public interface IUsuarioService
     Task<RespostaMetodos<RetornoUsuarioDto>> RemoverAsync(int id);
     Task<RespostaMetodos<RetornoUsuarioDto>> CriarFilhoAsync(CriarFilhoDto dto);
     Task<RespostaMetodos<RetornoLoginDto>> LoginAsync(LoginDto dto);
+    Task<RespostaMetodos<RetornoLoginDto>> RefreshTokenAsync(RefreshTokenDto dto);
+    Task<RespostaMetodos<object?>> ConfirmarEmailAsync(ConfirmarEmailDto dto);
+
 }

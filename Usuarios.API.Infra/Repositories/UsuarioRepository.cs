@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using GestaoTarefas.Domain.Entities;
 using GestaoTarefas.Domain.Interfaces;
 using GestaoTarefas.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 
 
-namespace GestaoTarefas.Infrastructure.Repositories;
+namespace GestaoTarefas.Infra.Repositories;
 
 public class UsuarioRepository : IUsuarioRepository
 {
@@ -28,6 +28,10 @@ public class UsuarioRepository : IUsuarioRepository
         var paisFilhos = new PaisFilhos(vinculo.PaiId, filho.Id);
         await _context.PaisFilhos.AddAsync(paisFilhos);
         await _context.SaveChangesAsync();
+    }
+    public async Task<Usuario?> ObterPorTokenConfirmacaoEmailAsync(string token)
+    {
+        return await _context.Usuarios.FirstOrDefaultAsync(u => u.TokenConfirmacaoEmail == token);
     }
 
     public async Task<IEnumerable<Usuario>> ObterTodosAsync()

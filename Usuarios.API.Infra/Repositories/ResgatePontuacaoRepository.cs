@@ -3,7 +3,7 @@ using GestaoTarefas.Domain.Entities;
 using GestaoTarefas.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace GestaoTarefas.API.Infra.Repositories;
+namespace GestaoTarefas.Infra.Repositories;
 
 public class ResgatePontuacaoRepository : IResgatePontuacaoRepository
 {

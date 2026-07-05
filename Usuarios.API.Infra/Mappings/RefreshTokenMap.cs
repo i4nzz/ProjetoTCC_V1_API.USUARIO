@@ -1,5 +1,4 @@
-﻿using GestaoTarefas.API.Domain.Entities;
-using GestaoTarefas.Domain.Entities;
+﻿using GestaoTarefas.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
