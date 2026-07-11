@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using GestaoTarefas.API.Domain.Interfaces;
 using GestaoTarefas.Application.Common.Responses;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;

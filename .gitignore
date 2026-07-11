@@ -53,3 +53,5 @@ publish/
 # program
 ##############################################
 Usuarios.API/Program.cs
+
+Usuarios.API/StorageFiles

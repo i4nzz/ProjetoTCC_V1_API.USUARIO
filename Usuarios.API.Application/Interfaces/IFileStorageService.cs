@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace GestaoTarefas.API.Domain.Interfaces;
+namespace GestaoTarefas.Application.Interfaces;
 
 public interface IFileStorageService
 {

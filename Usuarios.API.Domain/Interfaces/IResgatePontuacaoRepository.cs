@@ -1,6 +1,6 @@
 ﻿using GestaoTarefas.Domain.Entities;
 
-namespace GestaoTarefas.API.Domain.Interfaces;
+namespace GestaoTarefas.Domain.Interfaces;
 
 public interface IResgatePontuacaoRepository
 {

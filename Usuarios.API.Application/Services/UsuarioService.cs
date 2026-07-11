@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using GestaoTarefas.API.Application.Interfaces;
 using GestaoTarefas.Application.Common.Responses;
 using GestaoTarefas.Application.DTOs.Login;
 using GestaoTarefas.Application.DTOs.Usuario;

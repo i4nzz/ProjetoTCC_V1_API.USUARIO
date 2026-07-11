@@ -2,8 +2,8 @@
 using System.Text.RegularExpressions;
 using GestaoTarefas.API.Application.Configuration;
 using GestaoTarefas.API.Application.DTOs.Email;
-using GestaoTarefas.API.Application.Interfaces;
 using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Resend;

@@ -66,8 +66,9 @@ public class ComprovacaoTarefaController : ControllerBase
     /// <param name="dto">Dados da comprovação</param>
     /// <returns>Resultado da operação</returns>
     [HttpPost("enviar")]
-    [Authorize(Roles = "Filho,Pai")]
-    public async Task<IActionResult> Enviar([FromBody] CriarComprovacaoDto dto)
+    //[Authorize(Roles = "Filho,Pai")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Enviar([FromForm] CriarComprovacaoDto dto)
     {
         if (!ModelState.IsValid)
         {

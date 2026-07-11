@@ -1,5 +1,5 @@
-﻿using GestaoTarefas.API.Domain.Interfaces;
-using GestaoTarefas.Domain.Entities;
+﻿using GestaoTarefas.Domain.Entities;
+using GestaoTarefas.Domain.Interfaces;
 using GestaoTarefas.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 

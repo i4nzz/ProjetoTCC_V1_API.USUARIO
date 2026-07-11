@@ -1,4 +1,4 @@
-﻿using GestaoTarefas.API.Domain.Interfaces;
+﻿using GestaoTarefas.Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 

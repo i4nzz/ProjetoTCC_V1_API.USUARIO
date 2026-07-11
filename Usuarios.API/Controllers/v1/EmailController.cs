@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using GestaoTarefas.API.Application.DTOs.Email;
-using GestaoTarefas.API.Application.Interfaces;
+using GestaoTarefas.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoTarefas.API.Controllers.v1;

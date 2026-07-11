@@ -1,6 +1,4 @@
-using GestaoTarefas.API.Application.Interfaces;
 using GestaoTarefas.API.Application.Services;
-using GestaoTarefas.API.Domain.Interfaces;
 using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Application.Services;
 using GestaoTarefas.Domain.Interfaces;

@@ -1,7 +1,7 @@
 ﻿using GestaoTarefas.API.Application.DTOs.Email;
 using GestaoTarefas.Application.Common.Responses;
 
-namespace GestaoTarefas.API.Application.Interfaces;
+namespace GestaoTarefas.Application.Interfaces;
 
 public interface IEmailService
 {
