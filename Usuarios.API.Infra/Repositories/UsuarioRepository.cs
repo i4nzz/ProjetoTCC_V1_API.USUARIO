@@ -65,6 +65,10 @@ public class UsuarioRepository : IUsuarioRepository
             await _context.SaveChangesAsync();
         }
     }
+    public async Task<bool> ExisteVinculoAsync(int paiId, int filhoId)
+    {
+        return await _context.PaisFilhos.AnyAsync(x => x.PaiId == paiId && x.FilhoId == filhoId);
+    }
 
     public async Task<Usuario?> ObterPorEmailAsync(string email)
     {

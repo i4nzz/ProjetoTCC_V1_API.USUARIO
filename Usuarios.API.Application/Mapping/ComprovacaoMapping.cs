@@ -15,7 +15,6 @@ public static class ComprovacaoMapping
             Id = comprovacao.Id,
             TarefaId = comprovacao.TarefaId,
             TituloTarefa = comprovacao.Tarefa?.Titulo ?? string.Empty,
-            UrlFoto = comprovacao.UrlFoto,
             Status = comprovacao.Status,
             DataEnvio = comprovacao.DataEnvio,
             DataValidacao = comprovacao.DataValidacao

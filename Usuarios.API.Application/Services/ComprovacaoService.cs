@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using GestaoTarefas.API.Domain.Interfaces;
 using GestaoTarefas.Application.Common.Responses;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;
@@ -14,15 +15,22 @@ public class ComprovacaoService : IComprovacaoService
     private readonly IComprovacaoRepository _comprovacaoRepository;
     private readonly ITarefaRepository _tarefaRepository;
     private readonly IPontuacaoRepository _pontuacaoRepository;
+
+    private readonly IFileStorageService _fileStorageService;
+    private readonly IUsuarioRepository _usuarioRepository;
     public ComprovacaoService(
         IComprovacaoRepository comprovacaoRepository
         , IPontuacaoRepository pontuacaoRepository
         , ITarefaRepository tarefaRepository
+        , IFileStorageService fileStorageService
+        , IUsuarioRepository usuarioRepository
         )
     {
         _comprovacaoRepository = comprovacaoRepository;
         _tarefaRepository = tarefaRepository;
         _pontuacaoRepository = pontuacaoRepository;
+        _fileStorageService = fileStorageService;
+        _usuarioRepository = usuarioRepository;
     }
 
     public async Task<RespostaMetodos<IEnumerable<RetornoComprovacaoDto>>> ObterPorTarefaAsync(int tarefaId)
@@ -70,9 +78,65 @@ public class ComprovacaoService : IComprovacaoService
         };
     }
 
+    public async Task<RespostaMetodos<(byte[] Conteudo, string ContentType)?>> ObterFotoAsync(int comprovacaoId, int usuarioId, string perfil)
+    {
+        var comprovacao = await _comprovacaoRepository.ObterPorIdAsync(comprovacaoId);
+
+        if (comprovacao == null)
+        {
+            return new RespostaMetodos<(byte[], string)?>
+            {
+                Sucesso = false,
+                Mensagem = "Comprovação não encontrada"
+            };
+        }
+
+        var tarefa = await _tarefaRepository.ObterPorIdAsync(comprovacao.TarefaId);
+
+        if (tarefa == null)
+        {
+            return new RespostaMetodos<(byte[], string)?>
+            {
+                Sucesso = false,
+                Mensagem = "Tarefa não encontrada"
+            };
+        }
+
+        var autorizado = perfil == "Filho"
+            ? tarefa.FilhoId == usuarioId
+            : await _usuarioRepository.ExisteVinculoAsync(usuarioId, tarefa.FilhoId);
+
+        if (!autorizado)
+        {
+            return new RespostaMetodos<(byte[], string)?>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para acessar esta foto"
+            };
+        }
+
+        var arquivo = await _fileStorageService.ObterArquivoAsync(comprovacao.UrlFoto);
+
+        if (arquivo == null)
+        {
+            return new RespostaMetodos<(byte[], string)?>
+            {
+                Sucesso = false,
+                Mensagem = "Arquivo não encontrado no armazenamento"
+            };
+        }
+
+        return new RespostaMetodos<(byte[], string)?>
+        {
+            Sucesso = true,
+            ObjetoRetorno = arquivo
+        };
+    }
+
     public async Task<RespostaMetodos<RetornoComprovacaoDto>> EnviarAsync(CriarComprovacaoDto dto)
     {
-        if (dto == null || dto.UrlFoto == null || dto.TarefaId <= 0)
+        if (dto == null || dto.Foto == null || dto.TarefaId <= 0)
         {
             return new RespostaMetodos<RetornoComprovacaoDto>
             {
@@ -82,7 +146,24 @@ public class ComprovacaoService : IComprovacaoService
             };
         }
 
-        var comprovacao = new ComprovacaoTarefa(dto.TarefaId, dto.UrlFoto);
+        string caminhoArquivo = string.Empty;
+
+        try
+        {
+            caminhoArquivo = await _fileStorageService.SalvarArquivoAsync(dto.Foto, "Comprovacoes");
+        }
+
+        catch (ArgumentException ex)
+        {
+            return new RespostaMetodos<RetornoComprovacaoDto>
+            {
+                Sucesso = false,
+                ObjetoRetorno = null,
+                Mensagem = ex.Message
+            };
+        }
+
+        var comprovacao = new ComprovacaoTarefa(dto.TarefaId, caminhoArquivo);
 
         await _comprovacaoRepository.AdicionarAsync(comprovacao);
 

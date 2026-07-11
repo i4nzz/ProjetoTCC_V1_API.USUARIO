@@ -8,10 +8,7 @@ public class Tarefa
     public string? Descricao { get; set; }
     public int Pontos { get; set; }
     public DateTime Prazo { get; set; }
-
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
-
-    // Relacionamentos
     public Usuario Filho { get; set; } = null!;
     public ICollection<ComprovacaoTarefa> Comprovacoes { get; set; } = new List<ComprovacaoTarefa>();
 }

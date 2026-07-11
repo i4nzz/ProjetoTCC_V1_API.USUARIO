@@ -29,6 +29,7 @@ public static class ConfiguracaoInjecaoDeDependencia
         services.AddScoped<IComprovacaoService, ComprovacaoService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IFileStorageService, LocalFileStorageService>();
         #endregion
 
         #region Repositories

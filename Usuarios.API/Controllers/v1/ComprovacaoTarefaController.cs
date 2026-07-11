@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -82,6 +83,30 @@ public class ComprovacaoTarefaController : ControllerBase
 
         return StatusCode((int)HttpStatusCode.OK, resultado.ObjetoRetorno);
     }
+
+    /// <summary>
+    /// Obtém a foto de uma comprovação. Acesso restrito ao Filho dono da tarefa ou ao Pai vinculado a ele.
+    /// </summary>
+    [HttpGet("{id:int}/foto")]
+    [Authorize(Roles = "Pai,Filho")]
+    public async Task<IActionResult> ObterFoto(int id)
+    {
+        var usuarioId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var perfil = User.FindFirstValue(ClaimTypes.Role)!;
+
+        var resultado = await _comprovacaoTarefaService.ObterFotoAsync(id, usuarioId, perfil);
+
+        if (!resultado.Sucesso || resultado.ObjetoRetorno == null)
+        {
+            var statusCode = resultado.StatusCode != 0 ? (int)resultado.StatusCode : (int)HttpStatusCode.BadRequest;
+            return StatusCode(statusCode, resultado.Mensagem);
+        }
+
+        var (conteudo, contentType) = resultado.ObjetoRetorno.Value;
+        return File(conteudo, contentType);
+    }
+
+
     /// <summary>
     /// Validar comprovação de tarefa (aprovando ou rejeitando)
     /// </summary>

@@ -13,6 +13,6 @@ public interface IUsuarioRepository
     Task AdicionarFilhoAsync(Filho filho, PaisFilhos vinculo);
     Task<Usuario?> ObterPorTokenConfirmacaoEmailAsync(string token);
     Task<Usuario?> ObterPorTokenResetSenhaAsync(string token);
-
+    Task<bool> ExisteVinculoAsync(int paiId, int filhoId);
 }
 
