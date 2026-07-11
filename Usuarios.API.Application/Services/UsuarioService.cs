@@ -1,4 +1,5 @@
-﻿using GestaoTarefas.API.Application.Interfaces;
+﻿using System.Net;
+using GestaoTarefas.API.Application.Interfaces;
 using GestaoTarefas.Application.Common.Responses;
 using GestaoTarefas.Application.DTOs.Login;
 using GestaoTarefas.Application.DTOs.Usuario;
@@ -59,14 +60,24 @@ public class UsuarioService : IUsuarioService
 
     public async Task<RespostaMetodos<object?>> EsqueciSenhaAsync(EsqueciSenhaDto dto)
     {
-        const string mensagemGenerica = "Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.";
-
         var usuario = await _usuarioRepository.ObterPorEmailAsync(dto.Email);
 
         if (usuario != null && usuario.Ativo)
         {
             var expiracaoHoras = int.Parse(_configuration["ResetSenha:ExpiracaoHoras"] ?? "1");
+
             var token = usuario.GerarTokenResetSenha(TimeSpan.FromHours(expiracaoHoras));
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return new RespostaMetodos<object?>
+                {
+                    Sucesso = false,
+                    ObjetoRetorno = null,
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Mensagem = "Não foi possível gerar o token de redefinição de senha"
+                };
+            }
 
             await _usuarioRepository.AtualizarAsync(usuario);
 
@@ -74,14 +85,26 @@ public class UsuarioService : IUsuarioService
             var path = _configuration["UrlsFrontend:RedefinicaoSenhaPath"];
             var link = $"{baseUrl}{path}?token={token}";
 
-            await _emailService.EnviarEmailResetSenhaAsync(usuario.Email, usuario.Nome, link);
+            var resultadoEnvioEmail = await _emailService.EnviarEmailResetSenhaAsync(usuario.Email, usuario.Nome, link);
+
+            if (!resultadoEnvioEmail.Sucesso)
+            {
+                return new RespostaMetodos<object?>
+                {
+                    Sucesso = false,
+                    ObjetoRetorno = null,
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Mensagem = "Não foi possível enviar o e-mail de redefinição de senha"
+                };
+            }
         }
 
         return new RespostaMetodos<object?>
         {
             Sucesso = true,
             ObjetoRetorno = null,
-            Mensagem = mensagemGenerica
+            StatusCode = HttpStatusCode.OK,
+            Mensagem = "Você receberá instruções para redefinir sua senha."
         };
     }
 

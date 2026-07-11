@@ -126,48 +126,135 @@ public class EmailService : IEmailService
         var html = $"""
             <!DOCTYPE html>
             <html lang="pt-BR">
-            <head><meta charset="UTF-8"></head>
-            <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif;">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding:40px 16px;">
-                    <table width="600" cellpadding="0" cellspacing="0"style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-                      <tr>
-                        <td style="background:#1E3A5F;padding:32px;text-align:center;">
-                          <h1 style="color:#ffffff;margin:0;font-size:24px;">📧 TaskiDs</h1>
+
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Confirme seu e-mail</title>
+            </head>
+
+            <body style="margin:0;padding:0;background-color:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f7fb;padding:40px 20px;">
+                    <tr>
+                        <td align="center">
+
+                            <table width="600" cellpadding="0" cellspacing="0" border="0"
+                                style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.08);">
+
+                                <tr>
+                                    <td align="center"
+                                        style="background:linear-gradient(135deg,#1E3A5F,#2D8CF0);padding:36px;">
+
+                                        <div style="font-size:48px;margin-bottom:10px;">📧</div>
+
+                                        <h1 style="margin:0;color:#ffffff;font-size:30px;font-weight:bold;">
+                                            Task Kids - Confirmação de e-mail
+                                        </h1>
+
+                                        <p style="margin-top:10px;color:#dbeafe;font-size:15px;">
+                                            Educação financeira e tarefas para toda a família
+                                        </p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:45px 40px;">
+
+                                        <h2 style="margin-top:0;color:#1E3A5F;font-size:28px;">
+                                            Olá, {userName}! 👋
+                                        </h2>
+
+                                        <p style="font-size:16px;color:#475569;line-height:1.8;margin-bottom:24px;">
+                                            Seja muito bem-vindo ao
+                                            <strong>Task Kids</strong>!
+                                        </p>
+
+                                        <p style="font-size:16px;color:#475569;line-height:1.8;margin-bottom:30px;">
+                                            Estamos felizes por ter você conosco.
+                                            Para concluir seu cadastro e proteger sua conta,
+                                            basta confirmar seu endereço de e-mail clicando
+                                            no botão abaixo.
+                                        </p>
+
+                                        <div style="text-align:center;margin:40px 0;">
+
+                                            <a href="{confirmationLink}"
+                                                style="
+                                                    background:#2D8CF0;
+                                                    color:#ffffff;
+                                                    text-decoration:none;
+                                                    padding:16px 36px;
+                                                    border-radius:10px;
+                                                    display:inline-block;
+                                                    font-size:17px;
+                                                    font-weight:bold;
+                                                    box-shadow:0 4px 12px rgba(45,140,240,.3);
+                                                ">
+                                                ✅ Confirmar meu e-mail
+                                            </a>
+
+                                        </div>
+
+
+                                        <p style="
+                                            background:#f8fafc;
+                                            padding:14px;
+                                            border-radius:8px;
+                                            word-break:break-all;
+                                            font-size:13px;
+                                            color:#2563eb;
+                                            border:1px solid #e2e8f0;
+                                        ">
+                                            {confirmationLink}
+                                        </p>
+
+                                        <!-- Aviso -->
+                                        <table width="100%" cellpadding="0" cellspacing="0"
+                                            style="margin-top:30px;background:#eff6ff;border-left:4px solid #2D8CF0;border-radius:8px;">
+                                            <tr>
+                                                <td style="padding:18px;">
+
+                                                    <strong style="color:#1E3A5F;">
+                                                        🔒 Segurança
+                                                    </strong>
+
+                                                    <p style="margin:10px 0 0;color:#475569;font-size:14px;line-height:1.7;">
+                                                        Este link permanecerá válido por
+                                                        <strong>24 horas</strong>.
+                                                        Caso você não tenha criado uma conta no
+                                                        Task Kids, basta ignorar este e-mail.
+                                                    </p>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center"
+                                        style="padding:28px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+
+                                        <p style="margin:0;font-size:13px;color:#64748b;">
+                                            © 2026 <strong>TaskiDs</strong>
+                                        </p>
+
+                                        <p style="margin-top:10px;font-size:12px;color:#94a3b8;">
+                                            Este é um e-mail automático. Não responda esta mensagem.
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                            </table>
+
                         </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:40px 32px;">
-                          <h2 style="color:#1E3A5F;margin:0 0 16px;">
-                            Olá, {userName}! 👋
-                          </h2>
-                          <p style="color:#475569;font-size:16px;line-height:1.6;margin:0 0 24px;">
-                            Obrigado por se cadastrar no <strong>TaskiDs</strong>!
-                            Clique no botão abaixo para confirmar seu endereço de e-mail
-                            e ativar sua conta.
-                          </p>
-                          <div style="text-align:center;margin:32px 0;">
-                            <a href="{confirmationLink}"
-                               style="background:#2D8CF0;color:#ffffff;padding:14px 32px;border-radius:8px;text-decoration:none;font-size:16px;font-weight:bold;display:inline-block;">
-                              ✅ Confirmar E-mail
-                            </a>
-                          </div>
-                          <p style="color:#94a3b8;font-size:13px;text-align:center;">
-                            Este link expira em <strong>24 horas</strong>.<br>
-                            Se você não criou uma conta, ignore este e-mail.
-                          </p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="background:#f8fafc;padding:20px 32px;text-align:center;border-top:1px solid #e2e8f0;">
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
+                    </tr>
+                </table>
+
             </body>
+
             </html>
             """;
 
@@ -208,60 +295,138 @@ public class EmailService : IEmailService
         var html = $"""
             <!DOCTYPE html>
             <html lang="pt-BR">
-            <head><meta charset="UTF-8"></head>
-            <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif;">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding:40px 16px;">
-                    <table width="600" cellpadding="0" cellspacing="0"style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
 
-                      <tr>
-                        <td style="background:#1E3A5F;padding:32px;text-align:center;">
-                          <h1 style="color:#ffffff;margin:0;font-size:24px;">🔐 TaskiDs</h1>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Redefinição de Senha</title>
+            </head>
+
+            <body style="margin:0;padding:0;background-color:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f7fb;padding:40px 20px;">
+                    <tr>
+                        <td align="center">
+
+                            <table width="600" cellpadding="0" cellspacing="0" border="0"
+                                style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.08);">
+
+                                <!-- Cabeçalho -->
+                                <tr>
+                                    <td align="center"
+                                        style="background:linear-gradient(135deg,#1E3A5F,#2D8CF0);padding:36px;">
+
+                                        <div style="font-size:48px;margin-bottom:10px;">🔐</div>
+
+                                        <h1 style="margin:0;color:#ffffff;font-size:30px;font-weight:bold;">
+                                            Task Kids
+                                        </h1>
+
+                                        <p style="margin-top:10px;color:#dbeafe;font-size:15px;">
+                                            Segurança da sua conta
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                                <!-- Conteúdo -->
+                                <tr>
+                                    <td style="padding:45px 40px;">
+
+                                        <h2 style="margin-top:0;color:#1E3A5F;font-size:28px;">
+                                            Redefinição de senha
+                                        </h2>
+
+                                        <p style="font-size:16px;color:#475569;line-height:1.8;margin-bottom:24px;">
+                                            Olá, <strong>{userName}</strong>! 👋
+                                        </p>
+
+                                        <p style="font-size:16px;color:#475569;line-height:1.8;margin-bottom:30px;">
+                                            Recebemos uma solicitação para redefinir a senha da sua conta no
+                                            <strong>Task Kids</strong>.
+                                            Caso tenha sido você, clique no botão abaixo para criar uma nova senha.
+                                        </p>
+
+                                        <!-- Botão -->
+                                        <div style="text-align:center;margin:40px 0;">
+
+                                            <a href="{resetLink}"
+                                                style="
+                                                    background:#EA580C;
+                                                    color:#ffffff;
+                                                    text-decoration:none;
+                                                    padding:16px 36px;
+                                                    border-radius:10px;
+                                                    display:inline-block;
+                                                    font-size:17px;
+                                                    font-weight:bold;
+                                                    box-shadow:0 4px 12px rgba(234,88,12,.35);
+                                                ">
+                                                🔑 Redefinir minha senha
+                                            </a>
+
+                                        </div>
+
+                                        <p style="
+                                            background:#f8fafc;
+                                            padding:14px;
+                                            border-radius:8px;
+                                            word-break:break-all;
+                                            font-size:13px;
+                                            color:#2563eb;
+                                            border:1px solid #e2e8f0;
+                                        ">
+                                            {resetLink}
+                                        </p>
+
+                                        <!-- Aviso -->
+                                        <table width="100%" cellpadding="0" cellspacing="0"
+                                            style="margin-top:30px;background:#FFF7ED;border-left:4px solid #EA580C;border-radius:8px;">
+                                            <tr>
+                                                <td style="padding:18px;">
+
+                                                    <strong style="color:#9A3412;">
+                                                        🛡️ Aviso de segurança
+                                                    </strong>
+
+                                                    <p style="margin:10px 0 0;color:#7C2D12;font-size:14px;line-height:1.7;">
+                                                        Este link permanecerá válido por
+                                                        <strong>1 hora</strong>.
+                                                        Caso você não tenha solicitado a redefinição da senha,
+                                                        ignore este e-mail. Sua senha atual continuará a mesma.
+                                                    </p>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+                                <!-- Rodapé -->
+                                <tr>
+                                    <td align="center"
+                                        style="padding:28px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+
+                                        <p style="margin:0;font-size:13px;color:#64748b;">
+                                            © 2026 <strong>Task Kids</strong>
+                                        </p>
+
+                                        <p style="margin-top:10px;font-size:12px;color:#94a3b8;">
+                                            Este é um e-mail automático. Não responda esta mensagem.
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                            </table>
+
                         </td>
-                      </tr>
+                    </tr>
+                </table>
 
-                      <tr>
-                        <td style="padding:40px 32px;">
-                          <h2 style="color:#1E3A5F;margin:0 0 16px;">
-                            Redefinição de senha
-                          </h2>
-                          <p style="color:#475569;font-size:16px;line-height:1.6;margin:0 0 8px;">
-                            Olá, <strong>{userName}</strong>!
-                          </p>
-                          <p style="color:#475569;font-size:16px;line-height:1.6;margin:0 0 24px;">
-                            Recebemos uma solicitação para redefinir a senha da sua conta.
-                            Clique no botão abaixo para continuar:
-                          </p>
-                          <div style="text-align:center;margin:32px 0;">
-                            <a href="{resetLink}"
-                               style="background:#EA580C;color:#ffffff;padding:14px 32px;
-                                      border-radius:8px;text-decoration:none;font-size:16px;
-                                      font-weight:bold;display:inline-block;">
-                              🔑 Redefinir Senha
-                            </a>
-                          </div>
-                          <div style="background:#FFF7ED;border-left:4px solid #EA580C;
-                                      padding:12px 16px;border-radius:4px;margin-bottom:24px;">
-                            <p style="color:#9a3412;font-size:13px;margin:0;">
-                              ⚠️ Este link expira em <strong>1 hora</strong>.
-                              Se não foi você quem solicitou, ignore este e-mail —
-                              sua senha permanece a mesma.
-                            </p>
-                          </div>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td style="background:#f8fafc;padding:20px 32px;text-align:center;border-top:1px solid #e2e8f0;">
-                        </td>
-                      </tr>
-
-                    </table>
-                  </td>
-                </tr>
-              </table>
             </body>
+
             </html>
             """;
 
