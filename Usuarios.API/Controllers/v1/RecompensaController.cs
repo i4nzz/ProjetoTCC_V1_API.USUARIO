@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoTarefas.Controllers.v1;
@@ -10,6 +11,7 @@ namespace GestaoTarefas.Controllers.v1;
 /// </summary>
 [ApiController]
 [Route("api/v1/[controller]")]
+[Authorize]
 public class RecompensaController : ControllerBase
 {
     private readonly IRecompensaService _recompensaService;
@@ -29,6 +31,7 @@ public class RecompensaController : ControllerBase
     /// <returns>Lista de recompensas do filho</returns>
     [HttpGet]
     [Route("ObterPorFilho/{filhoId}")]
+    [Authorize(Roles = "Pai,Filho")]
     public async Task<IActionResult> ObterPorFilho(int filhoId)
     {
         var recompensas = await _recompensaService.ObterPorFilhoAsync(filhoId);
@@ -48,6 +51,7 @@ public class RecompensaController : ControllerBase
     /// <returns>Detalhes da recompensa</returns>
     [HttpGet]
     [Route("ObterPorId/{id}")]
+    [Authorize(Roles = "Pai,Filho")]
     public async Task<IActionResult> ObterPorId(int id)
     {
         var recompensa = await _recompensaService.ObterPorIdAsync(id);
@@ -67,6 +71,7 @@ public class RecompensaController : ControllerBase
     /// <returns>Resultado da operação</returns>
     [HttpPost]
     [Route("Criar")]
+    [Authorize(Roles = "Pai,Filho")]
     public async Task<IActionResult> Criar([FromBody] CriarRecompensaDto dto)
     {
         var recompensa = await _recompensaService.CriarAsync(dto);
@@ -86,6 +91,7 @@ public class RecompensaController : ControllerBase
     /// <returns>Resultado da operação</returns>
     [HttpPut]
     [Route("Atualizar/{id}")]
+    [Authorize(Roles = "Pai,Filho")]
     public async Task<IActionResult> Atualizar(int id, [FromBody] CriarRecompensaDto dto)
     {
         var atualizado = await _recompensaService.AtualizarAsync(id, dto);
@@ -105,6 +111,7 @@ public class RecompensaController : ControllerBase
     /// <returns>Resultado da operação</returns>
     [HttpDelete]
     [Route("Remover/{id}")]
+    [Authorize(Roles = "Pai,Filho")]
     public async Task<IActionResult> Remover(int id)
     {
         var removido = await _recompensaService.RemoverAsync(id);
@@ -125,6 +132,7 @@ public class RecompensaController : ControllerBase
     /// <returns>Resultado da operação</returns>
     [HttpPost]
     [Route("Resgatar/{filhoId}/{recompensaId}")]
+    [Authorize(Roles = "Filho")]
     public async Task<IActionResult> Resgatar(int filhoId, int recompensaId)
     {
         var resgatada = await _recompensaService.ResgatarAsync(filhoId, recompensaId);
@@ -143,6 +151,7 @@ public class RecompensaController : ControllerBase
     /// <returns>Lista de recompensas resgatadas</returns>
     [HttpGet]
     [Route("ObterResgatadas/{filhoId}")]
+    [Authorize(Roles = "Pai,Filho")]
     public async Task<IActionResult> ObterResgatadas(int filhoId)
     {
         var resgatadas = await _recompensaService.ObterResgatadasPorFilhoAsync(filhoId);
@@ -154,6 +163,4 @@ public class RecompensaController : ControllerBase
 
         return StatusCode((int)HttpStatusCode.OK, resgatadas);
     }
-
-
 }

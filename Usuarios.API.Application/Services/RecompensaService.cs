@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using GestaoTarefas.API.Application.Interfaces;
 using GestaoTarefas.Application.Common.Responses;
 using GestaoTarefas.Application.DTOs.Recompensa;
 using GestaoTarefas.Application.Interfaces;
@@ -14,22 +15,35 @@ public class RecompensaService : IRecompensaService
     private readonly IPontuacaoRepository _pontuacaoRepository;
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly IResgatePontuacaoRepository _resgatePontuacaoRepository;
+    private readonly IAutorizacaoFamiliarService _autorizacao;
 
     public RecompensaService(
         IRecompensaRepository recompensaRepository
         , IPontuacaoRepository pontuacaoRepository
         , IUsuarioRepository usuarioRepository
         , IResgatePontuacaoRepository resgatePontuacaoRepository
+        , IAutorizacaoFamiliarService autorizacao
         )
     {
         _recompensaRepository = recompensaRepository;
         _pontuacaoRepository = pontuacaoRepository;
         _usuarioRepository = usuarioRepository;
         _resgatePontuacaoRepository = resgatePontuacaoRepository;
+        _autorizacao = autorizacao;
     }
 
     public async Task<RespostaMetodos<IEnumerable<RetornoRecompensaDto>>> ObterPorFilhoAsync(int filhoId)
     {
+        if (!await _autorizacao.PodeAcessarFilhoAsync(filhoId))
+        {
+            return new RespostaMetodos<IEnumerable<RetornoRecompensaDto>>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para acessar as recompensas deste filho"
+            };
+        }
+
         var recompensas = await _recompensaRepository.ObterPorFilhoAsync(filhoId);
 
         if (recompensas == null || !recompensas.Any())
@@ -67,6 +81,16 @@ public class RecompensaService : IRecompensaService
             };
         }
 
+        if (!await _autorizacao.PodeAcessarFilhoAsync(recompensa.FilhoId))
+        {
+            return new RespostaMetodos<RetornoRecompensaDto?>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para acessar esta recompensa"
+            };
+        }
+
         var retornoRecompensa = recompensa.ToDto();
 
         return new RespostaMetodos<RetornoRecompensaDto?>
@@ -89,6 +113,16 @@ public class RecompensaService : IRecompensaService
                 Sucesso = false,
                 ObjetoRetorno = null,
                 Mensagem = "Filho não encontrado."
+            };
+        }
+
+        if (!await _autorizacao.PodeAcessarFilhoAsync(dto.FilhoId))
+        {
+            return new RespostaMetodos<RetornoRecompensaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não pode criar recompensas para um filho que não é vinculado a você"
             };
         }
 
@@ -136,6 +170,17 @@ public class RecompensaService : IRecompensaService
                 Mensagem = "Recompensa não encontrada."
             };
         }
+
+        if (!await _autorizacao.PodeAcessarFilhoAsync(recompensa.FilhoId))
+        {
+            return new RespostaMetodos<RetornoRecompensaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para editar esta recompensa"
+            };
+        }
+
         recompensa.FilhoId = dto.FilhoId;
         recompensa.Descricao = dto.Descricao;
         recompensa.PontosNecessarios = dto.PontosNecessarios;
@@ -165,6 +210,16 @@ public class RecompensaService : IRecompensaService
             };
         }
 
+        if (!await _autorizacao.PodeAcessarFilhoAsync(recompensa.FilhoId))
+        {
+            return new RespostaMetodos<RetornoRecompensaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para remover esta recompensa"
+            };
+        }
+
         if (recompensa.Ativa)
         {
             recompensa.Ativa = false;
@@ -190,6 +245,16 @@ public class RecompensaService : IRecompensaService
 
     public async Task<RespostaMetodos<RetornoRecompensaResgatadaDto>> ResgatarAsync(int filhoId, int recompensaId)
     {
+        if (!await _autorizacao.PodeAcessarFilhoAsync(filhoId))
+        {
+            return new RespostaMetodos<RetornoRecompensaResgatadaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para resgatar recompensas em nome deste filho"
+            };
+        }
+
         var recompensa = await _recompensaRepository.ObterPorIdAsync(recompensaId);
 
         if (recompensa == null)
@@ -246,6 +311,16 @@ public class RecompensaService : IRecompensaService
 
     public async Task<RespostaMetodos<IEnumerable<RetornoRecompensaResgatadaDto>>> ObterResgatadasPorFilhoAsync(int filhoId)
     {
+        if (!await _autorizacao.PodeAcessarFilhoAsync(filhoId))
+        {
+            return new RespostaMetodos<IEnumerable<RetornoRecompensaResgatadaDto>>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para acessar as recompensas resgatadas deste filho"
+            };
+        }
+
         var resgatadas = await _recompensaRepository.ObterResgatadasPorFilhoAsync(filhoId);
 
         if (resgatadas == null || !resgatadas.Any())

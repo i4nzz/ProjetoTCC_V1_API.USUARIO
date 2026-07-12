@@ -1,4 +1,6 @@
-﻿using GestaoTarefas.Application.Common.Responses;
+﻿using System.Net;
+using GestaoTarefas.API.Application.Interfaces;
+using GestaoTarefas.Application.Common.Responses;
 using GestaoTarefas.Application.DTOs.Tarefa;
 using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Application.Mapping;
@@ -11,14 +13,18 @@ public class TarefaService : ITarefaService
 {
     private readonly ITarefaRepository _tarefaRepository;
     private readonly IUsuarioRepository _usuarioRepository;
+    private readonly IAutorizacaoFamiliarService _autorizacao;
+
 
     public TarefaService(
         ITarefaRepository tarefaRepository
         , IUsuarioRepository usuarioRepository
+        , IAutorizacaoFamiliarService autorizacao
         )
     {
         _tarefaRepository = tarefaRepository;
         _usuarioRepository = usuarioRepository;
+        _autorizacao = autorizacao;
     }
 
     public async Task<RespostaMetodos<IEnumerable<RetornoTarefaDto>>> ObterTodasAsync()
@@ -47,6 +53,16 @@ public class TarefaService : ITarefaService
 
     public async Task<RespostaMetodos<IEnumerable<RetornoTarefaDto>>> ObterPorFilhoAsync(int filhoId)
     {
+        if (!await _autorizacao.PodeAcessarFilhoAsync(filhoId))
+        {
+            return new RespostaMetodos<IEnumerable<RetornoTarefaDto>>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para acessar as tarefas deste filho"
+            };
+        }
+
         var tarefas = await _tarefaRepository.ObterPorFilhoAsync(filhoId);
 
         if (tarefas == null || !tarefas.Any())
@@ -83,6 +99,16 @@ public class TarefaService : ITarefaService
             };
         }
 
+        if (!await _autorizacao.PodeAcessarFilhoAsync(tarefa.FilhoId))
+        {
+            return new RespostaMetodos<RetornoTarefaDto?>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para acessar esta tarefa"
+            };
+        }
+
         var retornoTarefa = tarefa.ToDto();
 
         return new RespostaMetodos<RetornoTarefaDto?>
@@ -104,6 +130,16 @@ public class TarefaService : ITarefaService
                 Sucesso = false,
                 ObjetoRetorno = null,
                 Mensagem = "Filho não encontrado"
+            };
+        }
+
+        if (!await _autorizacao.PodeAcessarFilhoAsync(dto.FilhoId))
+        {
+            return new RespostaMetodos<RetornoTarefaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não pode criar tarefas para um filho que não é vinculado a você"
             };
         }
 
@@ -162,6 +198,27 @@ public class TarefaService : ITarefaService
             };
         }
 
+        if (!await _autorizacao.PodeAcessarFilhoAsync(tarefa.FilhoId))
+        {
+            return new RespostaMetodos<RetornoTarefaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para editar esta tarefa"
+            };
+        }
+
+        // se o dto estiver tentando mover a tarefa pra outro filho, valida o novo dono também
+        if (dto.FilhoId != tarefa.FilhoId && !await _autorizacao.PodeAcessarFilhoAsync(dto.FilhoId))
+        {
+            return new RespostaMetodos<RetornoTarefaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não pode mover esta tarefa para um filho que não é vinculado a você"
+            };
+        }
+
         if (dto.Prazo <= DateTime.UtcNow)
         {
             return new RespostaMetodos<RetornoTarefaDto>
@@ -209,6 +266,16 @@ public class TarefaService : ITarefaService
                 Sucesso = false,
                 ObjetoRetorno = null,
                 Mensagem = "Tarefa não encontrada"
+            };
+        }
+
+        if (!await _autorizacao.PodeAcessarFilhoAsync(tarefa.FilhoId))
+        {
+            return new RespostaMetodos<RetornoTarefaDto>
+            {
+                Sucesso = false,
+                StatusCode = HttpStatusCode.Forbidden,
+                Mensagem = "Você não tem permissão para remover esta tarefa"
             };
         }
 

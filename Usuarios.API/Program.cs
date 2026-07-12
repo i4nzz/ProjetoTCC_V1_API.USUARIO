@@ -17,6 +17,8 @@ builder.Services
     .AddResendEmail(builder.Configuration)
     .AddControllers();
 
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();

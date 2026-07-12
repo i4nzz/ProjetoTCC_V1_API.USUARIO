@@ -1,3 +1,5 @@
+using GestaoTarefas.API.Application.Interfaces;
+using GestaoTarefas.API.Application.Services;
 using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Application.Services;
 using GestaoTarefas.Domain.Interfaces;
@@ -27,6 +29,8 @@ public static class ConfiguracaoInjecaoDeDependencia
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IAutorizacaoFamiliarService, AutorizacaoFamiliarService>();
         #endregion
 
         #region Repositories
