@@ -1,7 +1,7 @@
-﻿namespace GestaoTarefas.Application.DTOs.Recompensa;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
+namespace GestaoTarefas.Application.DTOs.Recompensa;
 public class CriarComprovacaoDto
 {
     [Required]

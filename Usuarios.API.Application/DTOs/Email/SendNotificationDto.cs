@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GestaoTarefas.API.Application.DTOs.Email;
+namespace GestaoTarefas.Application.DTOs.Email;
 
 public class SendNotificationDto
 {

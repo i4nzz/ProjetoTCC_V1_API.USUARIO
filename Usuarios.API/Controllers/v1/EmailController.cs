@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using GestaoTarefas.API.Application.DTOs.Email;
+using GestaoTarefas.Application.DTOs.Email;
 using GestaoTarefas.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

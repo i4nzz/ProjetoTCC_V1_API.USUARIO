@@ -1,14 +1,14 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
-using GestaoTarefas.API.Application.Configuration;
-using GestaoTarefas.API.Application.DTOs.Email;
+using GestaoTarefas.Application.DTOs.Email;
 using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.Configuration;
 using GestaoTarefas.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Resend;
 
-namespace GestaoTarefas.API.Application.Services;
+namespace GestaoTarefas.Application.Services;
 
 public class EmailService : IEmailService
 {

@@ -1,7 +1,7 @@
-﻿using GestaoTarefas.API.Application.Configuration;
+﻿using GestaoTarefas.Application.Configuration;
 using Resend;
 
-namespace GestaoTarefas.API.IoC;
+namespace GestaoTarefas.IoC;
 
 /// <summary>
 /// Configuracoes para integração com o serviço de envio de e-mails Resend, incluindo a configuração da API Key e a injeção de dependência do cliente ResendClient para utilização nos serviços de envio de e-mails da aplicação.

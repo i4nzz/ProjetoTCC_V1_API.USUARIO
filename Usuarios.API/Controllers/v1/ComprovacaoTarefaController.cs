@@ -66,7 +66,7 @@ public class ComprovacaoTarefaController : ControllerBase
     /// <param name="dto">Dados da comprovação</param>
     /// <returns>Resultado da operação</returns>
     [HttpPost("enviar")]
-    //[Authorize(Roles = "Filho,Pai")]
+    [Authorize(Roles = "Filho,Pai")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> Enviar([FromForm] CriarComprovacaoDto dto)
     {
@@ -92,8 +92,8 @@ public class ComprovacaoTarefaController : ControllerBase
     [Authorize(Roles = "Pai,Filho")]
     public async Task<IActionResult> ObterFoto(int id)
     {
-        var usuarioId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var perfil = User.FindFirstValue(ClaimTypes.Role)!;
+        var usuarioId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!); // validar e entender isso aqui
+        var perfil = User.FindFirstValue(ClaimTypes.Role)!;                         // validar e entender isso aqui depois.
 
         var resultado = await _comprovacaoTarefaService.ObterFotoAsync(id, usuarioId, perfil);
 

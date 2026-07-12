@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-namespace GestaoTarefas.API.Application.Services;
+namespace GestaoTarefas.Application.Services;
 
 public class LocalFileStorageService : IFileStorageService
 {

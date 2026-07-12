@@ -2,7 +2,7 @@
 using System.Text.Json;
 using GestaoTarefas.Application.Common.Responses;
 
-namespace GestaoTarefas.API.Middlewares;
+namespace GestaoTarefas.Middlewares;
 
 /// <summary>
 /// Middleware para tratamento global de exceções na API, capturando erros não tratados e retornando respostas JSON padronizadas com mensagens de erro apropriadas e códigos de status HTTP correspondentes.

@@ -1,7 +1,6 @@
-using GestaoTarefas.API.IoC;
-using GestaoTarefas.API.Middlewares;
 using GestaoTarefas.Ioc;
 using GestaoTarefas.IoC;
+using GestaoTarefas.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 

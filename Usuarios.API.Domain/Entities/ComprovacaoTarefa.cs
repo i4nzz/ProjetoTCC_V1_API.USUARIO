@@ -5,13 +5,10 @@ namespace GestaoTarefas.Domain.Entities;
 public class ComprovacaoTarefa
 {
     public int Id { get; private set; }
-
     public int TarefaId { get; private set; }
     public Tarefa Tarefa { get; private set; }
-
     public string UrlFoto { get; private set; }
     public DateTime DataEnvio { get; private set; }
-
     public StatusValidacaoTarefaEnum Status { get; private set; }
     public DateTime? DataValidacao { get; private set; }
 

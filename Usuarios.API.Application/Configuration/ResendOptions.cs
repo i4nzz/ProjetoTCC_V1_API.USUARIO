@@ -1,4 +1,4 @@
-﻿namespace GestaoTarefas.API.Application.Configuration;
+﻿namespace GestaoTarefas.Application.Configuration;
 
 public class ResendOptions
 {

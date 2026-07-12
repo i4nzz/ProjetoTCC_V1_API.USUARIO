@@ -1,5 +1,5 @@
-﻿using GestaoTarefas.API.Application.DTOs.Email;
-using GestaoTarefas.Application.Common.Responses;
+﻿using GestaoTarefas.Application.Common.Responses;
+using GestaoTarefas.Application.DTOs.Email;
 
 namespace GestaoTarefas.Application.Interfaces;
 

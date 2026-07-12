@@ -4,6 +4,7 @@ using GestaoTarefas.Application.Interfaces;
 using GestaoTarefas.Application.Mapping;
 using GestaoTarefas.Domain.Entities;
 using GestaoTarefas.Domain.Interfaces;
+
 namespace GestaoTarefas.Application.Services;
 
 public class PontuacaoService : IPontuacaoService
